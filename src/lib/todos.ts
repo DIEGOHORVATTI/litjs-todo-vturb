@@ -27,31 +27,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 // `'use`, `andom`, and `rict'`
 // References to the brotli default dictionary:
 // `-26T`, `1983`, `40px`, `75px`, `bush`, `jack`, `mind`, `very`, and `wolf`
-let urlAlphabet = "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict";
+let urlAlphabet = 'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict'
 
 function nanoid(size = 21) {
-    let id = "";
-    // A compact alternative for `for (var i = 0; i < step; i++)`.
-    let i = size;
-    while (i--) {
-        // `| 0` is more compact and faster than `Math.floor()`.
-        id += urlAlphabet[(Math.random() * 64) | 0];
-    }
-    return id;
+  let id = ''
+  // A compact alternative for `for (var i = 0; i < step; i++)`.
+  let i = size
+  while (i--) {
+    // `| 0` is more compact and faster than `Math.floor()`.
+    id += urlAlphabet[(Math.random() * 64) | 0]
+  }
+  return id
 }
 
 export interface Todo {
-    id: string;
-    text: string;
-    completed: boolean;
+  id: string
+  text: string
+  completed: boolean
 }
 
-export type TodoEdit = Partial<Todo> & { id: string };
+export type TodoEdit = Partial<Todo> & { id: string }
 
-const todoFilters = ["all", "active", "completed"] as const;
-export type TodoFilter = (typeof todoFilters)[number];
+const todoFilters = ['all', 'active', 'completed'] as const
+export type TodoFilter = (typeof todoFilters)[number]
 function isTodoFilter(value: string | undefined): value is TodoFilter {
-    return todoFilters.includes(value as TodoFilter);
+  return todoFilters.includes(value as TodoFilter)
 }
 
 /**
@@ -60,120 +60,117 @@ function isTodoFilter(value: string | undefined): value is TodoFilter {
  * @fires a `change` event when the todo list changes.
  */
 export class Todos extends EventTarget {
-    #todos: Array<Todo> = [];
-    #filter: TodoFilter = this.#filterFromUrl();
+  #todos: Array<Todo> = []
+  #filter: TodoFilter = this.#filterFromUrl()
 
-    get all(): ReadonlyArray<Todo> {
-        return this.#todos;
+  get all(): ReadonlyArray<Todo> {
+    return this.#todos
+  }
+
+  get active(): ReadonlyArray<Todo> {
+    return this.#todos.filter((todo) => !todo.completed)
+  }
+
+  get completed(): ReadonlyArray<Todo> {
+    return this.#todos.filter((todo) => todo.completed)
+  }
+
+  get allCompleted(): boolean {
+    return this.#todos.every((todo) => todo.completed)
+  }
+
+  connect() {
+    window.addEventListener('hashchange', this.#onHashChange)
+  }
+
+  disconnect() {
+    window.removeEventListener('hashchange', this.#onHashChange)
+  }
+
+  filtered() {
+    switch (this.#filter) {
+      case 'active':
+        return this.active
+      case 'completed':
+        return this.completed
     }
+    return this.all
+  }
 
-    get active(): ReadonlyArray<Todo> {
-        return this.#todos.filter((todo) => !todo.completed);
-    }
+  #notifyChange() {
+    this.dispatchEvent(new Event('change'))
+  }
 
-    get completed(): ReadonlyArray<Todo> {
-        return this.#todos.filter((todo) => todo.completed);
-    }
+  add(text: string) {
+    this.#todos.push({
+      text,
+      completed: false,
+      id: nanoid(),
+    })
+    this.#notifyChange()
+  }
 
-    get allCompleted(): boolean {
-        return this.#todos.every((todo) => todo.completed);
-    }
+  delete(id: string) {
+    const index = this.#todos.findIndex((todo) => todo.id === id)
+    // Note: if the todo is not found, index is -1, and the >>> will flip the
+    // sign which makes the splice do nothing. Otherwise, index is the item
+    // we want to remove.
+    this.#todos.splice(index >>> 0, 1)
+    this.#notifyChange()
+  }
 
-    connect() {
-        window.addEventListener("hashchange", this.#onHashChange);
-    }
+  update(edit: TodoEdit) {
+    const todo = this.#todos.find((todo) => todo.id === edit.id)
 
-    disconnect() {
-        window.removeEventListener("hashchange", this.#onHashChange);
-    }
+    if (todo === undefined) return
 
-    filtered() {
-        switch (this.#filter) {
-            case "active":
-                return this.active;
-            case "completed":
-                return this.completed;
-        }
-        return this.all;
-    }
+    Object.assign(todo, edit)
+    this.#notifyChange()
+  }
 
-    #notifyChange() {
-        this.dispatchEvent(new Event("change"));
-    }
+  toggle(id: string) {
+    const todo = this.#todos.find((todo) => todo.id === id)
+    if (todo === undefined) return
 
-    add(text: string) {
-        this.#todos.push({
-            text,
-            completed: false,
-            id: nanoid(),
-        });
-        this.#notifyChange();
-    }
+    todo.completed = !todo.completed
+    this.#notifyChange()
+  }
 
-    delete(id: string) {
-        const index = this.#todos.findIndex((todo) => todo.id === id);
-        // Note: if the todo is not found, index is -1, and the >>> will flip the
-        // sign which makes the splice do nothing. Otherwise, index is the item
-        // we want to remove.
-        this.#todos.splice(index >>> 0, 1);
-        this.#notifyChange();
-    }
+  toggleAll() {
+    // First pass to see if all the TODOs are completed. If all the
+    // todos are completed, we'll set them all to active
+    const allComplete = this.#todos.every((todo) => todo.completed)
 
-    update(edit: TodoEdit) {
-        const todo = this.#todos.find((todo) => todo.id === edit.id);
+    // Replace the list to trigger updates
+    this.#todos = this.#todos.map((todo) => ({
+      ...todo,
+      completed: !allComplete,
+    }))
+    this.#notifyChange()
+  }
 
-        if (todo === undefined)
-            return;
+  clearCompleted() {
+    this.#todos = this.active as Todo[]
+    this.#notifyChange()
+  }
 
-        Object.assign(todo, edit);
-        this.#notifyChange();
-    }
+  get filter(): TodoFilter {
+    return this.#filter
+  }
 
-    toggle(id: string) {
-        const todo = this.#todos.find((todo) => todo.id === id);
-        if (todo === undefined)
-            return;
+  set filter(filter: TodoFilter) {
+    this.#filter = filter
+    this.#notifyChange()
+  }
 
-        todo.completed = !todo.completed;
-        this.#notifyChange();
-    }
+  #onHashChange = () => {
+    this.filter = this.#filterFromUrl()
+  }
 
-    toggleAll() {
-        // First pass to see if all the TODOs are completed. If all the
-        // todos are completed, we'll set them all to active
-        const allComplete = this.#todos.every((todo) => todo.completed);
+  #filterFromUrl() {
+    let filter = /#\/(.*)/.exec(window.location.hash)?.[1]
+    if (isTodoFilter(filter)) return filter
 
-        // Replace the list to trigger updates
-        this.#todos = this.#todos.map((todo) => ({
-            ...todo,
-            completed: !allComplete,
-        }));
-        this.#notifyChange();
-    }
-
-    clearCompleted() {
-        this.#todos = this.active as Todo[];
-        this.#notifyChange();
-    }
-
-    get filter(): TodoFilter {
-        return this.#filter;
-    }
-
-    set filter(filter: TodoFilter) {
-        this.#filter = filter;
-        this.#notifyChange();
-    }
-
-    #onHashChange = () => {
-        this.filter = this.#filterFromUrl();
-    };
-
-    #filterFromUrl() {
-        let filter = /#\/(.*)/.exec(window.location.hash)?.[1];
-        if (isTodoFilter(filter))
-            return filter;
-
-        return "all";
-    }
+    return 'all'
+  }
 }
