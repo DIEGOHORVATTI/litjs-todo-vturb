@@ -1,5 +1,17 @@
 # Desafio — Web Components com Lit (base: TodoMVC)
 
+### Instalação e Desenvolvimento
+
+```bash
+# Instalar dependências
+npm install
+
+# Rodar servidor de desenvolvimento
+npm run dev
+```
+
+⸻
+
 Este desafio avalia sua habilidade com **JavaScript moderno + Web Components + Lit**, com foco em **componentização**, **estado**, **eventos nativos** (via `addEventListener`), **estilização com CSS Variables**, **Shadow DOM fechado** e **testes com Jest**.
 
 Base obrigatória (starter):
@@ -152,3 +164,7 @@ O que NÃO queremos
 - Dependências de frameworks de estado (Redux/MobX/etc.) sem justificativa forte para o escopo.
 - Comunicação via import direto de store global sem documentação.
 - Solução “monolítica” com tudo em um único arquivo.
+
+```
+
+```
