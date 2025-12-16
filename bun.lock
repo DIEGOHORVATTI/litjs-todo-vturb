@@ -5,13 +5,12 @@
     "": {
       "name": "todomvc-lit",
       "dependencies": {
+        "@web/dev-server-esbuild": "^1.0.4",
         "lit": "^3.0.0-pre.0",
         "tslib": "^2.5.2",
       },
       "devDependencies": {
         "@web/dev-server": "^0.4.6",
-        "@web/dev-server-esbuild": "^1.0.4",
-        "todomvc-common": "^1.0.5",
         "typescript": "^5.0.4",
       },
     },
@@ -436,8 +435,6 @@
     "supports-preserve-symlinks-flag": ["supports-preserve-symlinks-flag@1.0.0", "", {}, "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="],
 
     "table-layout": ["table-layout@4.1.1", "", { "dependencies": { "array-back": "^6.2.2", "wordwrapjs": "^5.1.0" } }, "sha512-iK5/YhZxq5GO5z8wb0bY1317uDF3Zjpha0QFFLA8/trAoiLbQD0HUbMesEaxyzUgDxi2QlcbM8IvqOlEjgoXBA=="],
-
-    "todomvc-common": ["todomvc-common@1.0.5", "", {}, "sha512-D8kEJmxVMQIWwztEdH+WeiAfXRbbSCpgXq4NkYi+gduJ2tr8CNq7sYLfJvjpQ10KD9QxJwig57rvMbV2QAESwQ=="],
 
     "toidentifier": ["toidentifier@1.0.1", "", {}, "sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA=="],
 

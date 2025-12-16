@@ -8,16 +8,14 @@
   },
   "scripts": {
     "dev": "wds",
-    "build": "tsc && mkdir -p dist && cp index.html dist/ && cp node_modules/todomvc-common/base.{js,css} dist/ && cp -r lib/* dist/",
     "tsc": "tsc"
   },
   "devDependencies": {
     "@web/dev-server": "^0.4.6",
-    "@web/dev-server-esbuild": "^1.0.4",
-    "todomvc-common": "^1.0.5",
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@web/dev-server-esbuild": "^1.0.4",
     "lit": "^3.0.0-pre.0",
     "tslib": "^2.5.2"
   }
