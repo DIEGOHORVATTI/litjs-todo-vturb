@@ -167,11 +167,11 @@ export class TodoItem extends LitElement {
   }
 
   #toggleTodo() {
-    this.dispatchEvent(new ToggleTodoEvent({ id: this.todo.id }))
+    this.dispatchEvent(new EditTodoEvent({ id: this.todo.id, completed: !this.todo.completed }))
   }
 
   #deleteTodo() {
-    this.dispatchEvent(new RemoveTodoEvent({ id: this.todo.id }))
+    this.dispatchEvent(new DeleteTodoEvent(this.todo.id))
   }
 
   #beginEdit() {
