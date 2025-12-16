@@ -4,21 +4,15 @@ import { property } from 'lit/decorators/property.js'
 import { repeat } from 'lit/directives/repeat.js'
 
 import { todoStyles } from './todo.css.js'
-import { type Todos } from './todos.js'
+import type { Todo } from '../../types/index.js'
 
 import './todo-item.js'
 
-import { ToggleAllTodoEvent } from './events.js'
-import { updateOnEvent } from './utils/update-on-event.js'
+import { ToggleAllTodoEvent } from '../../events/todo-events.js'
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
   interface HTMLElementTagNameMap {
     'todo-list': TodoList
-  }
-  // eslint-disable-next-line no-unused-vars
-  interface Window {
-    extraTodoListCssToAdopt?: string
   }
 }
 
@@ -82,34 +76,31 @@ export class TodoList extends LitElement {
     `,
   ]
 
-  @updateOnEvent('change')
-  @property({ attribute: false })
-  todoList?: Todos
+  @property({ type: Array })
+  todos: Todo[] = []
+
+  @property({ type: Boolean })
+  allCompleted = false
 
   override render() {
     return html`
-      ${(this.todoList?.all.length ?? 0) > 0
+      ${this.todos.length > 0
         ? html`
             <input
               @change=${this.#onToggleAllChange}
               id="toggle-all"
               type="checkbox"
               class="toggle-all"
-              .checked=${this.todoList?.allCompleted ?? false}
+              .checked=${this.allCompleted}
             />
             <label for="toggle-all"> Mark all as complete </label>
           `
         : nothing}
       <ul class="todo-list">
         ${repeat(
-          this.todoList?.filtered() ?? [],
+          this.todos,
           (todo) => todo.id,
-          (todo) =>
-            html`<todo-item
-              .todoId=${todo.id}
-              .text=${todo.text}
-              .completed=${todo.completed}
-            ></todo-item>`
+          (todo) => html`<todo-item .todo=${todo}></todo-item>`
         )}
       </ul>
     `

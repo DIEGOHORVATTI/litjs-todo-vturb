@@ -3,12 +3,13 @@ import { classMap } from 'lit/directives/class-map.js'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { state } from 'lit/decorators/state.js'
 
-import { todoStyles } from './todo.css.js'
+import { todoStyles } from './components/todo/todo.css.js'
 import { Todos } from './todos.js'
 
-import './todo-list.js'
-import './todo-form.js'
-import './todo-footer.js'
+import './components/layout/app-header.js'
+import './components/todo/todo-list.js'
+import './components/todo/todo-form.js'
+import './components/todo/todo-footer.js'
 
 import {
   AddTodoEvent,
@@ -16,7 +17,7 @@ import {
   ToggleAllTodoEvent,
   EditTodoEvent,
   ClearCompletedEvent,
-} from './events.js'
+} from './events/todo-events.js'
 
 import { updateOnEvent } from './utils/update-on-event.js'
 
@@ -31,18 +32,6 @@ export class TodoApp extends LitElement {
         margin: 130px 0 40px 0;
         position: relative;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        position: absolute;
-        top: -140px;
-        width: 100%;
-        font-size: 80px;
-        font-weight: 200;
-        text-align: center;
-        color: #b83f45;
-        -webkit-text-rendering: optimizeLegibility;
-        -moz-text-rendering: optimizeLegibility;
-        text-rendering: optimizeLegibility;
       }
       main {
         position: relative;
@@ -84,40 +73,53 @@ export class TodoApp extends LitElement {
   }
 
   override render() {
-    return html`<section>
-      <header class="header">
-        <h1>todos</h1>
-        <todo-form .todoList=${this.todoList}></todo-form>
-      </header>
-      <main class="main">
-        <todo-list class="show-priority" .todoList=${this.todoList}></todo-list>
-      </main>
-      <todo-footer
-        class="${classMap({
-          hidden: this.todoList.all.length === 0,
-        })}"
-        .todoList=${this.todoList}
-      ></todo-footer>
-    </section>`
+    return html`
+      <section>
+        <app-header>
+          <todo-form></todo-form>
+        </app-header>
+        <main class="main">
+          <todo-list
+            class="show-priority"
+            .todos=${this.todoList.filtered()}
+            .allCompleted=${this.todoList.allCompleted}
+          ></todo-list>
+        </main>
+        <todo-footer
+          class="${classMap({
+            hidden: this.todoList.all.length === 0,
+          })}"
+          .activeCount=${this.todoList.active.length}
+          .completedCount=${this.todoList.completed.length}
+          .filter=${this.todoList.filter}
+        ></todo-footer>
+      </section>
+    `
   }
 
-  #onAddTodo = (e: AddTodoEvent) => {
-    this.todoList.add(e.text)
+  #onAddTodo(e: AddTodoEvent) {
+    this.todoList.add(e.payload)
   }
 
-  #onDeleteTodo = (e: DeleteTodoEvent) => {
-    this.todoList.delete(e.id)
+  #onDeleteTodo(e: DeleteTodoEvent) {
+    this.todoList.remove(e.id)
   }
 
-  #onEditTodo = (e: EditTodoEvent) => {
+  #onEditTodo(e: EditTodoEvent) {
     this.todoList.update(e.edit)
   }
 
-  #onToggleAll = (_e: ToggleAllTodoEvent) => {
+  #onToggleAll() {
     this.todoList.toggleAll()
   }
 
-  #onClearCompleted = (_e: ClearCompletedEvent) => {
+  #onClearCompleted() {
     this.todoList.clearCompleted()
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'todo-app': TodoApp
   }
 }
