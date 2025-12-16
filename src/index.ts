@@ -9,6 +9,7 @@ import { Todos } from './todos.js'
 import './todo-list.js'
 import './todo-form.js'
 import './todo-footer.js'
+
 import {
   AddTodoEvent,
   DeleteTodoEvent,
@@ -16,7 +17,8 @@ import {
   EditTodoEvent,
   ClearCompletedEvent,
 } from './events.js'
-import { updateOnEvent } from './utils.js'
+
+import { updateOnEvent } from './utils/update-on-event.js'
 
 @customElement('todo-app')
 export class TodoApp extends LitElement {
@@ -119,5 +121,3 @@ export class TodoApp extends LitElement {
     this.todoList.clearCompleted()
   }
 }
-
-// Note: Global declaration moved to src/components/todo-app.ts (new implementation)

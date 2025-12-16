@@ -7,8 +7,9 @@ import { todoStyles } from './todo.css.js'
 import { type Todos } from './todos.js'
 
 import './todo-item.js'
+
 import { ToggleAllTodoEvent } from './events.js'
-import { updateOnEvent } from './utils.js'
+import { updateOnEvent } from './utils/update-on-event.js'
 
 declare global {
   // eslint-disable-next-line no-unused-vars

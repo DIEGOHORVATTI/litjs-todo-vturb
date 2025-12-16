@@ -5,7 +5,7 @@ import { classMap } from 'lit/directives/class-map.js'
 
 import { todoStyles } from './todo.css.js'
 import { type Todos } from './todos.js'
-import { updateOnEvent } from './utils.js'
+import { updateOnEvent } from './utils/update-on-event.js'
 import { ClearCompletedEvent } from './events.js'
 
 @customElement('todo-footer')
@@ -29,11 +29,8 @@ export class TodoFooter extends LitElement {
         left: 0;
         height: 50px;
         overflow: hidden;
-        box-shadow:
-          0 1px 1px rgba(0, 0, 0, 0.2),
-          0 8px 0 -3px #f6f6f6,
-          0 9px 1px -3px rgba(0, 0, 0, 0.2),
-          0 16px 0 -6px #f6f6f6,
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
+          0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6,
           0 17px 2px -6px rgba(0, 0, 0, 0.2);
       }
 

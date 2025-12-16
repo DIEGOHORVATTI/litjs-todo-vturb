@@ -6,7 +6,7 @@ import { query } from 'lit/decorators/query.js'
 import { todoStyles } from './todo.css.js'
 import { type Todos } from './todos.js'
 import { AddTodoEvent } from './events.js'
-import { updateOnEvent } from './utils.js'
+import { updateOnEvent } from './utils/update-on-event.js'
 
 @customElement('todo-form')
 export class TodoForm extends LitElement {
