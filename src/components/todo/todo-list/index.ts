@@ -33,13 +33,17 @@ export class TodoList extends LitElement {
 
   override render() {
     return html`
-      <input
-        id="toggle-all"
-        type="checkbox"
-        class="toggle-all"
-        .checked=${this.allCompleted}
-        data-action="toggle-all" />
-      <label for="toggle-all"> Mark all as complete </label>
+      <div class="new-todo-row">
+        <input
+          id="toggle-all"
+          type="checkbox"
+          class="toggle toggle-all"
+          .checked=${this.allCompleted}
+          data-action="toggle-all" />
+        <label for="toggle-all">Toggle all</label>
+
+        <slot name="new-todo"></slot>
+      </div>
 
       <ul class="todo-list">
         ${repeat(

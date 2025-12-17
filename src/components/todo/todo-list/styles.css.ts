@@ -1,12 +1,27 @@
 import { css } from 'lit'
 
+import { todoItemCheckboxStyles } from '../../../styles/todo-checkbox.css.js'
+
 export const todoListStyles = css`
-  :host {
-    display: block;
-  }
+  ${todoItemCheckboxStyles}
 
   :focus {
     box-shadow: none !important;
+  }
+
+  .new-todo-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  ::slotted([slot='new-todo']) {
+    flex: 1;
+    min-width: 0;
   }
 
   .todo-list {
@@ -16,38 +31,25 @@ export const todoListStyles = css`
   }
 
   .toggle-all {
+    position: absolute;
     width: 1px;
     height: 1px;
-    border: none;
-    opacity: 0;
-    position: absolute;
-    right: 100%;
-    bottom: 100%;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  .toggle-all + label {
-    display: flex;
+  .toggle + label {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 45px;
-    height: 65px;
     font-size: 0;
-    position: absolute;
-    top: -65px;
-    left: 0;
-  }
-
-  .toggle-all + label:before {
-    content: '❯';
-    display: inline-block;
-    font-size: 22px;
-    color: var(--color-muted);
-    padding: 10px 27px;
-    transform: rotate(90deg);
-  }
-
-  .toggle-all:checked + label:before {
-    color: var(--color-text);
+    cursor: pointer;
   }
 
   todo-item {

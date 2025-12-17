@@ -32,9 +32,13 @@ export class AppHeader extends LitElement {
   override render() {
     return html`
       <header class="header">
-        <ui-toggle label="Dark" data-action="theme"></ui-toggle>
+        <div class="top-row">
+          <ui-toggle label="Dark" data-action="theme"></ui-toggle>
+        </div>
 
-        <slot></slot>
+        <div class="content-row">
+          <slot></slot>
+        </div>
       </header>
     `
   }

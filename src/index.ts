@@ -116,15 +116,12 @@ export class TodoApp extends LitElement {
 
     return html`
       <section style="width: 500px;">
-        <app-header>
-          <todo-form></todo-form>
-        </app-header>
+        <app-header></app-header>
 
         <main class="main">
-          <todo-list
-            class="show-priority"
-            .todos=${filteredTodos}
-            .allCompleted=${allCompleted}></todo-list>
+          <todo-list class="show-priority" .todos=${filteredTodos} .allCompleted=${allCompleted}>
+            <todo-form slot="new-todo"></todo-form>
+          </todo-list>
         </main>
 
         <todo-footer

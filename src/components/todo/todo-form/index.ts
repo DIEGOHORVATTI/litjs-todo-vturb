@@ -11,12 +11,7 @@ export class TodoForm extends LitElement {
   static override styles = todoStyles
 
   override render() {
-    return html`
-      <ui-input
-        class="new-todo"
-        placeholder="What needs to be done?"
-        data-action="new-todo"></ui-input>
-    `
+    return html` <ui-input placeholder="Qual a nova tarefa?" data-action="new-todo"></ui-input> `
   }
 
   override connectedCallback(): void {
