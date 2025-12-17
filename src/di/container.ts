@@ -5,7 +5,7 @@ export function createContainer(): TodoUseCases {
   const repo = new LocalStorageTodoRepository()
 
   const ids = {
-    nextId: () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),
+    nextId: () => String(Date.now()),
   }
 
   const clock = {
