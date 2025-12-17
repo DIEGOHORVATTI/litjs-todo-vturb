@@ -8,6 +8,13 @@ npm install
 
 # Rodar servidor de desenvolvimento
 npm run dev
+
+# Rodar os testes
+npm test
+
+# Rodar o build
+npm build
+npm start
 ```
 
 ⸻
