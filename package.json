@@ -23,8 +23,7 @@
   },
   "scripts": {
     "dev": "wds",
-    "tsc": "tsc",
-    "build": "tsc",
+    "build": "esbuild src/views/index.ts --bundle --minify --tree-shaking=true --outdir=dist",
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch"

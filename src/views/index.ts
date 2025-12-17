@@ -42,6 +42,12 @@ export class TodoApp extends LitElement {
       :host {
         display: block;
         margin: 96px auto var(--space-6) auto;
+        background: var(--color-bg);
+      }
+
+      section {
+        width: 600px;
+        margin: 0 auto;
         background: var(--color-surface);
         border: 1px solid var(--color-border);
         border-radius: var(--radius-lg);
@@ -170,7 +176,7 @@ export class TodoApp extends LitElement {
     const allCompleted = this.todos.length > 0 && completedCount === this.todos.length
 
     return html`
-      <section style="width: 600px;">
+      <section>
         <app-header class="hidden"></app-header>
 
         <main class="main">

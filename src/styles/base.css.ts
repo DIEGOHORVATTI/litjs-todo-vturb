@@ -20,6 +20,27 @@ export const baseStyles = css`
     color: inherit;
   }
 
+  input,
+  select,
+  textarea {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    outline: none;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: var(--focus-ring);
+    border-color: color-mix(in oklab, var(--color-accent), transparent 55%);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-muted);
+  }
+
   a {
     color: inherit;
   }
