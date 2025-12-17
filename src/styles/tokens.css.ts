@@ -8,7 +8,8 @@ import { css } from 'lit'
 export const tokens = css`
   :host {
     /* Typography */
-    --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    --font-sans:
+      ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
       'Apple Color Emoji', 'Segoe UI Emoji';
 
     --text-xs: 12px;

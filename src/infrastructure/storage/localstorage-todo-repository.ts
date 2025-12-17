@@ -1,5 +1,5 @@
-import type { StorageData, Todo, TodoEdit } from '../../types/index.js'
 import type { TodoRepository } from '../../domain/todos/todo-repository.js'
+import type { StorageData, Todo, TodoEdit } from '../../types/index.js'
 
 const STORAGE_KEY = 'todomvc-plus'
 

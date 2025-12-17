@@ -185,7 +185,6 @@ export class TodoApp extends LitElement {
 ### Persistência
 
 - **LocalStorage** para:
-
   - `todos` (auto-save em cada mutação)
   - `projects`
   - `theme`

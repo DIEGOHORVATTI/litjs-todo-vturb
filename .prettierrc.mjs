@@ -7,36 +7,36 @@ export default {
   useTabs: false,
   semi: false,
   singleQuote: true,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   bracketSpacing: true,
   bracketSameLine: true,
-  plugins: ["@ianvs/prettier-plugin-sort-imports"],
+  plugins: ['@ianvs/prettier-plugin-sort-imports'],
   importOrder: [
     // External dependencies
-    "<BUILTIN_MODULES>",
-    "<THIRD_PARTY_MODULES>",
-    "",
+    '<BUILTIN_MODULES>',
+    '<THIRD_PARTY_MODULES>',
+    '',
     // Type imports
-    "^types/(.*)$",
-    "",
+    '^types/(.*)$',
+    '',
     // Application layers (Clean Architecture)
-    "^domain/(.*)$",
-    "^application/(.*)$",
-    "^infrastructure/(.*)$",
-    "",
+    '^domain/(.*)$',
+    '^application/(.*)$',
+    '^infrastructure/(.*)$',
+    '',
     // Source code structure
-    "^src/(.*)$",
-    "^components/(.*)$",
-    "^utils/(.*)$",
-    "",
+    '^src/(.*)$',
+    '^components/(.*)$',
+    '^utils/(.*)$',
+    '',
     // Configuration and DI
-    "^di/(.*)$",
-    "",
+    '^di/(.*)$',
+    '',
     // Styles (usually imported last in components)
-    "^styles/(.*)$",
-    "",
+    '^styles/(.*)$',
+    '',
     // Internal aliases and relative imports
-    "^@(.*)$",
-    "^[./]"
-  ]
+    '^@(.*)$',
+    '^[./]',
+  ],
 }

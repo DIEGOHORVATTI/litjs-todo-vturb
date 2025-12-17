@@ -149,8 +149,7 @@ export class TodoItem extends LitElement {
             class="toggle"
             type="checkbox"
             .checked=${this.todo.completed}
-            @change=${this.#toggleTodo}
-          />
+            @change=${this.#toggleTodo} />
           <label @dblclick=${this.#beginEdit}> ${this.todo.title} </label>
           <button @click=${this.#deleteTodo} class="destroy"></button>
         </div>
@@ -160,8 +159,7 @@ export class TodoItem extends LitElement {
           @change=${this.#finishEdit}
           @keyup=${this.#captureEscape}
           @blur=${this.#abortEdit}
-          .value=${this.todo.title}
-        />
+          .value=${this.todo.title} />
       </li>
     `
   }

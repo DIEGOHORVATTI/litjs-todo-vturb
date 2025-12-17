@@ -21,8 +21,7 @@ export class TodoForm extends LitElement {
       <ui-input
         class="new-todo"
         placeholder="What needs to be done?"
-        @ui-submit=${this.#onSubmit}
-      ></ui-input>
+        @ui-submit=${this.#onSubmit}></ui-input>
     `
   }
 

@@ -121,8 +121,7 @@ export class TodoApp extends LitElement {
           <todo-list
             class="show-priority"
             .todos=${filteredTodos}
-            .allCompleted=${allCompleted}
-          ></todo-list>
+            .allCompleted=${allCompleted}></todo-list>
         </main>
 
         <todo-footer
@@ -131,8 +130,7 @@ export class TodoApp extends LitElement {
           })}"
           .activeCount=${activeCount}
           .completedCount=${completedCount}
-          .filter=${this.filter}
-        ></todo-footer>
+          .filter=${this.filter}></todo-footer>
       </section>
     `
   }

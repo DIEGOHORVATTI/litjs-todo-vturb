@@ -54,8 +54,7 @@ export class UiInput extends LitElement {
         .value=${this.value}
         placeholder=${this.placeholder}
         @input=${this.#onInput}
-        @keydown=${this.#onKeydown}
-      />
+        @keydown=${this.#onKeydown} />
     `
   }
 

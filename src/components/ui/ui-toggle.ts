@@ -29,7 +29,9 @@ export class UiToggle extends LitElement {
       align-items: center;
       padding: 2px;
       cursor: pointer;
-      transition: background 160ms ease, border-color 160ms ease;
+      transition:
+        background 160ms ease,
+        border-color 160ms ease;
     }
 
     button[aria-checked='true'] {
@@ -69,8 +71,7 @@ export class UiToggle extends LitElement {
         type="button"
         role="switch"
         aria-checked=${this.checked ? 'true' : 'false'}
-        @click=${this.#onToggle}
-      >
+        @click=${this.#onToggle}>
         <span class="thumb"></span>
       </button>
       ${this.label ? html`<span class="label">${this.label}</span>` : null}

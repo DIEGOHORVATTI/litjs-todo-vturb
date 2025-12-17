@@ -91,8 +91,7 @@ export class TodoList extends LitElement {
               id="toggle-all"
               type="checkbox"
               class="toggle-all"
-              .checked=${this.allCompleted}
-            />
+              .checked=${this.allCompleted} />
             <label for="toggle-all"> Mark all as complete </label>
           `
         : nothing}

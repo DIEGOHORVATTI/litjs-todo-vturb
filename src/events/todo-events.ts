@@ -1,4 +1,4 @@
-import type { TodoEdit, Priority } from '../types/index.js'
+import type { Priority, TodoEdit } from '../types/index.js'
 import { AppEvent } from './base.js'
 
 export interface AddTodoPayload {
