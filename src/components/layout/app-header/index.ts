@@ -1,8 +1,10 @@
-import { LitElement, html } from 'lit'
+import { html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 
 import { appHeaderStyles } from './styles.css.js'
+
 import '../../ui/ui-toggle/index.js'
+
 import { ThemeChangeEvent } from '../../../events/theme-events.js'
 
 @customElement('app-header')

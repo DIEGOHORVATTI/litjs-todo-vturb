@@ -1,12 +1,12 @@
-import { LitElement, html, nothing } from 'lit'
+import { html, LitElement, nothing } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { property } from 'lit/decorators/property.js'
 import { classMap } from 'lit/directives/class-map.js'
 
+import { ClearCompletedEvent } from '../../../events/todo-events.js'
+import type { FilterMode as TodoFilter } from '../../../types/index.js'
 import { todoStyles } from '../todo.css.js'
 import { todoFooterStyles } from './styles.css.js'
-import type { FilterMode as TodoFilter } from '../../../types/index.js'
-import { ClearCompletedEvent } from '../../../events/todo-events.js'
 
 @customElement('todo-footer')
 export class TodoFooter extends LitElement {

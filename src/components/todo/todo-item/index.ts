@@ -1,13 +1,13 @@
-import { LitElement, html } from 'lit'
+import { html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { property } from 'lit/decorators/property.js'
 import { state } from 'lit/decorators/state.js'
 import { classMap } from 'lit/directives/class-map.js'
 
-import { todoStyles } from '../todo.css.js'
-import { todoItemStyles } from './styles.css.js'
 import { RemoveTodoEvent, UpdateTodoEvent } from '../../../events/todo-events.js'
 import type { Todo } from '../../../types/index.js'
+import { todoStyles } from '../todo.css.js'
+import { todoItemStyles } from './styles.css.js'
 
 @customElement('todo-item')
 export class TodoItem extends LitElement {

@@ -1,29 +1,27 @@
-import { LitElement, html, css } from 'lit'
-import { classMap } from 'lit/directives/class-map.js'
+import { css, html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { state } from 'lit/decorators/state.js'
+import { classMap } from 'lit/directives/class-map.js'
 
 import { todoStyles } from './components/todo/todo.css.js'
-import { tokens } from './styles/tokens.css.js'
-import { baseStyles } from './styles/base.css.js'
-import type { Todo, FilterMode } from './types/index.js'
 import { createContainer } from './di/container.js'
+import { baseStyles } from './styles/base.css.js'
+import { tokens } from './styles/tokens.css.js'
+import type { FilterMode, Todo } from './types/index.js'
 
 import './components/layout/app-header/index.js'
 import './components/todo/todo-list/index.js'
 import './components/todo/todo-form.js'
 import './components/todo/todo-footer/index.js'
 
+import { ThemeChangeEvent } from './events/theme-events.js'
 import {
   AddTodoEvent,
+  ClearCompletedEvent,
   RemoveTodoEvent,
   ToggleAllTodoEvent,
   UpdateTodoEvent,
-  ClearCompletedEvent,
 } from './events/todo-events.js'
-
-import { ThemeChangeEvent } from './events/theme-events.js'
-
 import { updateOnEvent } from './utils/update-on-event.js'
 
 @customElement('todo-app')

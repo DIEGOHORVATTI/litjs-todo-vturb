@@ -11,6 +11,7 @@ export default {
   bracketSpacing: true,
   bracketSameLine: true,
   plugins: ['@ianvs/prettier-plugin-sort-imports'],
+  importOrderParserPlugins: ['typescript', 'decorators-legacy'],
   importOrder: [
     // External dependencies
     '<BUILTIN_MODULES>',

@@ -1,11 +1,11 @@
-import { LitElement, html, nothing } from 'lit'
+import { html, LitElement, nothing } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { property } from 'lit/decorators/property.js'
 import { repeat } from 'lit/directives/repeat.js'
 
+import type { Todo } from '../../../types/index.js'
 import { todoStyles } from '../todo.css.js'
 import { todoListStyles } from './styles.css.js'
-import type { Todo } from '../../../types/index.js'
 
 import '../todo-item/index.js'
 

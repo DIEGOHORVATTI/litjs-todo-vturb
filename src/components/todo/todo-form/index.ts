@@ -1,8 +1,8 @@
-import { LitElement, html } from 'lit'
+import { html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 
-import { todoStyles } from '../todo.css.js'
 import { AddTodoEvent } from '../../../events/todo-events.js'
+import { todoStyles } from '../todo.css.js'
 import { todoFormStyles } from './styles.css.js'
 
 import '../../ui/ui-input/index.js'
