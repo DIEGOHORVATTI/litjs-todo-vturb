@@ -1,4 +1,4 @@
-import { createTodoUseCases } from '../application/todos/todo-usecases.js'
+import { createTodoUseCases } from '../services/todo-usecases.js'
 import {
   fixedClock,
   fixedIds,

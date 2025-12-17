@@ -1,16 +1,26 @@
-# Arquitetura TodoMVC+ com Lit
+# Arquitetura TodoMVC+ com Lit (MVC)
 
 ## Visão Geral
 
-Esta arquitetura implementa uma aplicação TodoMVC estendida usando **Web Components com Lit**, seguindo os princípios de **componentização**, **encapsulamento via Shadow DOM fechado** e **comunicação por eventos nativos**.
+Esta arquitetura implementa uma aplicação TodoMVC estendida usando **Web Components com Lit**, seguindo princípios de **MVC (Model–View–Controller)**, **encapsulamento via Shadow DOM fechado** e **comunicação por eventos nativos**.
 
 ### Princípios Arquiteturais
 
 1. **Single Root Component**: Apenas `<todo-app>` é exposto no `index.html`
 2. **Event-Driven Communication**: Comunicação exclusiva via `CustomEvent` + `addEventListener`
 3. **Closed Shadow DOM**: Encapsulamento completo no componente principal
-4. **Centralized State**: Estado gerenciado no componente raiz
+4. **Model owns state**: O estado vive em Models (não nos Views)
 5. **Unidirectional Data Flow**: Props down, events up
+
+---
+
+## MVC no contexto do Lit
+
+- **Model**: mantém estado e regras derivadas (ex.: `TodoModel`, `ThemeModel`). Não acessa DOM.
+- **View**: Web Components (LitElements em `src/components/**`) renderizam a UI e disparam eventos.
+- **Controller**: recebe eventos, chama serviços/repositórios e atualiza o Model (ex.: `TodoController`).
+
+O `<todo-app>` continua sendo o **componente raiz** e serve como “shell” da View: ele registra listeners (via `addEventListener`) e delega as ações aos Controllers/Models (sem importar “domain/application/infrastructure”).
 
 ---
 

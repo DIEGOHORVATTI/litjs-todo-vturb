@@ -20,18 +20,10 @@ export default {
     // Type imports
     '^types/(.*)$',
     '',
-    // Application layers (Clean Architecture)
-    '^domain/(.*)$',
-    '^application/(.*)$',
-    '^infrastructure/(.*)$',
-    '',
     // Source code structure
     '^src/(.*)$',
     '^components/(.*)$',
     '^utils/(.*)$',
-    '',
-    // Configuration and DI
-    '^di/(.*)$',
     '',
     // Styles (usually imported last in components)
     '^styles/(.*)$',

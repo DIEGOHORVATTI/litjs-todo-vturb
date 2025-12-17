@@ -1,11 +1,3 @@
-/**
- * Base class for all custom events in the application.
- *
- * All events are configured to:
- * - bubble: true (propagate up the DOM tree)
- * - composed: true (cross Shadow DOM boundaries)
- * - cancelable: false by default (can be overridden)
- */
 export abstract class AppEvent<T = unknown> extends CustomEvent<T> {
   constructor(
     type: string,
@@ -24,9 +16,6 @@ export abstract class AppEvent<T = unknown> extends CustomEvent<T> {
     })
   }
 
-  /**
-   * Convenient getter to access the event payload
-   */
   get payload(): T {
     return this.detail
   }

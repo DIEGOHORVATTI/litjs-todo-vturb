@@ -1,10 +1,5 @@
 import { css } from 'lit'
 
-/**
- * Design tokens (CSS Custom Properties) for the app.
- *
- * Applied at the root (<todo-app>) so it cascades to internal components.
- */
 export const tokens = css`
   :host {
     /* Typography */

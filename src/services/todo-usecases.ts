@@ -1,5 +1,5 @@
-import type { TodoRepository } from '../../domain/todos/todo-repository.js'
-import type { Priority, Todo, TodoEdit } from '../../types/index.js'
+import type { TodoRepository } from '../models/todo-repository.js'
+import type { Priority, Todo, TodoEdit } from '../types/index.js'
 
 interface Clock {
   nowISO(): string

@@ -1,4 +1,4 @@
-import type { Todo, TodoEdit } from '../../types/index.js'
+import type { Todo, TodoEdit } from '../types/index.js'
 
 export interface TodoRepository {
   list(): Promise<Todo[]>

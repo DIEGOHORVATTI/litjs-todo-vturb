@@ -1,9 +1,5 @@
 import { css } from 'lit'
 
-/**
- * Base styles shared across components.
- * Keep it small: reset + accessibility + consistent defaults.
- */
 export const baseStyles = css`
   :host {
     font-family: var(--font-sans);

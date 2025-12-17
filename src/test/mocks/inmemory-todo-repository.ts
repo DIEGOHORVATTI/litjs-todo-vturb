@@ -1,4 +1,4 @@
-import type { TodoRepository } from '../../domain/todos/todo-repository.js'
+import type { TodoRepository } from '../../models/todo-repository.js'
 import type { Todo, TodoEdit } from '../../types/index.js'
 
 export class InMemoryTodoRepository implements TodoRepository {

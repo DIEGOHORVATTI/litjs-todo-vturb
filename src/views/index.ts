@@ -3,30 +3,36 @@ import { customElement } from 'lit/decorators/custom-element.js'
 import { state } from 'lit/decorators/state.js'
 import { classMap } from 'lit/directives/class-map.js'
 
-import { todoStyles } from './components/todo/shared/styles/todo.css.js'
-import { createContainer } from './di/container.js'
-import { CONSTANTS } from './shared/constants/config.js'
-import { baseStyles } from './styles/base.css.js'
-import { tokens } from './styles/tokens.css.js'
-import type { FilterMode, Todo } from './types/index.js'
+import { todoStyles } from '../components/todo/shared/styles/todo.css.js'
+import { ThemeController } from '../controllers/theme-controller.js'
+import { TodoController } from '../controllers/todo-controller.js'
+import { ThemeModel } from '../models/theme-model.js'
+import { TodoModel } from '../models/todo-model.js'
+import { createServices } from '../services/create-services.js'
+import { CONSTANTS } from '../shared/constants/config.js'
+import { baseStyles } from '../styles/base.css.js'
+import { tokens } from '../styles/tokens.css.js'
+import type { FilterMode, Todo } from '../types/index.js'
 
-import './components/layout/app-header/index.js'
-import './components/todo/todo-list/index.js'
-import './components/todo/todo-form/index.js'
-import './components/todo/todo-footer/index.js'
+import '../components/layout/app-header/index.js'
+import '../components/todo/todo-list/index.js'
+import '../components/todo/todo-form/index.js'
+import '../components/todo/todo-footer/index.js'
 
-import { ThemeChangeEvent } from './events/theme-events.js'
+import { ThemeChangeEvent } from '../events/theme-events.js'
 import {
   AddTodoEvent,
   ClearCompletedEvent,
   RemoveTodoEvent,
   ToggleAllTodoEvent,
   UpdateTodoEvent,
-} from './events/todo-events.js'
-import { updateOnEvent } from './utils/update-on-event.js'
+} from '../events/todo-events.js'
+import { updateOnEvent } from '../utils/update-on-event.js'
 
 @customElement('todo-app')
 export class TodoApp extends LitElement {
+  static override shadowRootOptions: ShadowRootInit = { mode: 'closed' }
+
   static override styles = [
     tokens,
     baseStyles,
@@ -65,7 +71,11 @@ export class TodoApp extends LitElement {
   @state()
   private theme: 'light' | 'dark' = 'light'
 
-  #container = createContainer()
+  #services = createServices()
+  #todoModel = new TodoModel()
+  #themeModel = new ThemeModel()
+  #todoController = new TodoController(this.#services, this.#todoModel)
+  #themeController = new ThemeController(this.#themeModel)
 
   constructor() {
     super()
@@ -86,6 +96,7 @@ export class TodoApp extends LitElement {
     const evt = e as CustomEvent<{ filter: FilterMode }>
     const next = evt.detail?.filter ?? 'all'
     this.filter = next
+    this.#todoModel.setFilter(next)
     this.requestUpdate()
   }
 
@@ -98,6 +109,7 @@ export class TodoApp extends LitElement {
     const stored = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY)
     if (stored === 'dark' || stored === 'light') {
       this.theme = stored
+      this.#themeModel.setTheme(stored)
     }
     this.dataset.theme = this.theme
   }
@@ -134,66 +146,58 @@ export class TodoApp extends LitElement {
   }
 
   #onAddTodo(e: AddTodoEvent) {
-    void this.#container.addTodo(e.payload).then((todo) => {
-      this.todos = [...this.todos, todo]
+    void this.#todoController.addTodo(e.payload).then(() => {
+      this.todos = [...this.#todoModel.todos]
       this.requestUpdate()
     })
   }
 
   #onRemoveTodo(e: RemoveTodoEvent) {
     if (e.defaultPrevented) return
-    void this.#container.removeTodo(e.payload.id).then(() => {
-      this.todos = this.todos.filter((t) => t.id !== e.payload.id)
+    void this.#todoController.removeTodo(e.payload).then(() => {
+      this.todos = [...this.#todoModel.todos]
       this.requestUpdate()
     })
   }
 
   #onUpdateTodo(e: UpdateTodoEvent) {
-    void this.#container.updateTodo(e.payload).then(() => {
-      this.todos = this.todos.map((t) =>
-        t.id === e.payload.id ? ({ ...t, ...e.payload.changes } as Todo) : t
-      )
+    void this.#todoController.updateTodo(e.payload).then(() => {
+      this.todos = [...this.#todoModel.todos]
       this.requestUpdate()
     })
   }
 
   #onToggleAll(e: ToggleAllTodoEvent) {
-    const input = e.payload.completed === undefined ? {} : { completed: e.payload.completed }
-    void this.#container.toggleAll(input).then((updated) => {
-      this.todos = updated
+    void this.#todoController.toggleAll(e.payload).then(() => {
+      this.todos = [...this.#todoModel.todos]
       this.requestUpdate()
     })
   }
 
   #onClearCompleted(e: ClearCompletedEvent) {
     if (e.defaultPrevented) return
-    void this.#container.clearCompleted().then((updated) => {
-      this.todos = updated
+    void this.#todoController.clearCompleted().then(() => {
+      this.todos = [...this.#todoModel.todos]
       this.requestUpdate()
     })
   }
 
   #onThemeChange(e: ThemeChangeEvent) {
-    this.theme = e.payload.theme
+    this.theme = this.#themeController.setTheme(e.payload.theme)
     this.dataset.theme = this.theme
     window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY, this.theme)
   }
 
   async #hydrateTodos() {
-    const todos = await this.#container.loadTodos()
-    this.todos = todos
+    await this.#todoController.hydrate()
+    this.todos = [...this.#todoModel.todos]
     this.requestUpdate()
   }
 
   #filteredTodos(): Todo[] {
-    switch (this.filter) {
-      case 'active':
-        return this.todos.filter((t) => !t.completed)
-      case 'completed':
-        return this.todos.filter((t) => t.completed)
-      default:
-        return this.todos
-    }
+    this.#todoModel.setTodos(this.todos)
+    this.#todoModel.setFilter(this.filter)
+    return this.#todoModel.getFilteredTodos()
   }
 }
 

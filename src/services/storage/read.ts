@@ -1,5 +1,5 @@
-import { CONSTANTS } from '../../../shared/constants/config.js'
-import type { StorageData } from '../../../types/index.js'
+import { CONSTANTS } from '../../shared/constants/config.js'
+import type { StorageData } from '../../types/index.js'
 
 export default function read(): StorageData {
   const raw = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY)
