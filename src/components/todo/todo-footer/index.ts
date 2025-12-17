@@ -38,14 +38,14 @@ export class TodoFooter extends LitElement {
   override render() {
     if (this.activeCount === 0 && this.completedCount === 0) return nothing
 
-    const allFilter = filterLink({ text: 'All', filter: 'all', selectedFilter: this.filter })
+    const allFilter = filterLink({ text: 'Todos', filter: 'all', selectedFilter: this.filter })
     const activeFilter = filterLink({
-      text: 'Active',
+      text: 'Ativas',
       filter: 'active',
       selectedFilter: this.filter,
     })
     const completedFilter = filterLink({
-      text: 'Completed',
+      text: 'Concluídas',
       filter: 'completed',
       selectedFilter: this.filter,
     })
@@ -58,7 +58,7 @@ export class TodoFooter extends LitElement {
     return html`
       <span class="todo-count">
         <strong>${this.activeCount}</strong>
-        pendente
+        ${this.activeCount === 1 ? 'pendente' : 'pendentes'}
       </span>
 
       <div class="filters">

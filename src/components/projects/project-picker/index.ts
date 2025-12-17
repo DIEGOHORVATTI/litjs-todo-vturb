@@ -11,7 +11,7 @@ export class ProjectPicker extends LitElement {
     css`
       :host {
         display: block;
-        min-width: 240px;
+        width: 100%;
       }
 
       label {
@@ -28,6 +28,8 @@ export class ProjectPicker extends LitElement {
         border: 1px solid var(--color-border);
         background: var(--color-surface-2);
         color: var(--color-text);
+        width: 100%;
+        box-sizing: border-box;
       }
 
       input:focus {
@@ -56,7 +58,7 @@ export class ProjectPicker extends LitElement {
 
   override render() {
     const suggestions = [
-      { id: 'all', name: 'All' },
+      { id: 'all', name: 'Todos' },
       { id: 'inbox', name: 'Inbox' },
       ...this.projects.map((p) => ({ id: p.id, name: p.name })),
     ]
@@ -66,13 +68,12 @@ export class ProjectPicker extends LitElement {
 
     return html`
       <label>
-        <span>Projeto</span>
         <input
           type="text"
           list="project-options"
           data-action="select-project"
           .value=${selectedName}
-          placeholder="All / Inbox / projeto" />
+          placeholder="Todos / Inbox / projeto" />
         <datalist id="project-options">
           ${suggestions.map((s) => html`<option value=${s.name}></option>`)}
         </datalist>
@@ -92,15 +93,15 @@ export class ProjectPicker extends LitElement {
     if (!input) return
     if (input.dataset.action !== 'select-project') return
 
-    this.#emitSelectionFromInput(input.value, { strict: true })
+    this.#emitSelectionFromInput(input.value)
   }
 
-  #emitSelectionFromInput(raw: string, opts: { strict?: boolean } = {}) {
+  #emitSelectionFromInput(raw: string) {
     const value = (raw ?? '').trim()
     if (!value) return
 
     const lowers = value.toLowerCase()
-    if (lowers === 'all') {
+    if (lowers === 'all' || lowers === 'todos') {
       this.dispatchEvent(new SelectProjectEvent({ projectId: 'all' }))
       return
     }
@@ -110,12 +111,7 @@ export class ProjectPicker extends LitElement {
     }
 
     const match = this.projects.find((p) => p.name.toLowerCase() === lowers)
-    if (!match) {
-      if (opts.strict) return
-
-      this.dispatchEvent(new SelectProjectEvent({ projectId: value }))
-      return
-    }
+    if (!match) return
 
     this.dispatchEvent(new SelectProjectEvent({ projectId: match.id }))
   }

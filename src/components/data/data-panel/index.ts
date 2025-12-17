@@ -76,11 +76,15 @@ export class DataPanel extends LitElement {
   override render() {
     return html`
       <div class="row">
-        <ui-button
-          label=${this.open ? 'Fechar' : 'Export / Import'}
-          data-action="toggle"></ui-button>
-        <ui-button label="Exportar" data-action="export"></ui-button>
-        <ui-button label="Importar" data-action="import"></ui-button>
+        <ui-button label=${this.open ? 'Fechar' : 'Exportar / Importar'} data-action="toggle">
+        </ui-button>
+
+        ${this.open
+          ? html`
+              <ui-button label="Exportar" data-action="export"></ui-button>
+              <ui-button label="Importar" data-action="import"></ui-button>
+            `
+          : null}
       </div>
 
       ${this.open
@@ -91,8 +95,8 @@ export class DataPanel extends LitElement {
                 placeholder="Cole aqui o JSON para importar, ou clique em Exportar para gerar."
                 .value=${this.value}></textarea>
               <div class="hint">
-                Exporta e importa o estado completo (projects + todos). Import faz validação mínima
-                do formato.
+                Exporta e importa o estado completo (projetos + tarefas). A importação faz validação
+                mínima do formato.
               </div>
             </div>
           `

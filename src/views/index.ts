@@ -24,8 +24,8 @@ import '../components/projects/project-picker/index.js'
 import '../components/projects/project-form/index.js'
 import '../components/data/data-panel/index.js'
 
-import { AddProjectEvent, SelectProjectEvent } from '../events/project-events.js'
 import { DataExportEvent, DataImportEvent } from '../events/data-events.js'
+import { AddProjectEvent, SelectProjectEvent } from '../events/project-events.js'
 import { ThemeChangeEvent } from '../events/theme-events.js'
 import {
   AddTodoEvent,
@@ -47,13 +47,12 @@ export class TodoApp extends LitElement {
     css`
       :host {
         display: block;
-        margin: 96px auto var(--space-6) auto;
-        border-radius: var(--radius-lg);
-        background: var(--color-bg);
+        padding: 96px 0 var(--space-6) 0;
       }
 
       section {
         width: 800px;
+        display: block;
         margin: 0 auto;
         background: var(--color-surface);
         border: 1px solid var(--color-border);
@@ -86,7 +85,7 @@ export class TodoApp extends LitElement {
       .projects-row {
         padding: var(--space-3) var(--space-4);
         display: grid;
-        grid-template-columns: 320px 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: var(--space-4);
         align-items: end;
         border-bottom: 1px solid var(--color-border);
@@ -94,6 +93,10 @@ export class TodoApp extends LitElement {
       }
 
       @media (max-width: 860px) {
+        :host {
+          padding: 48px 0 var(--space-6) 0;
+        }
+
         section {
           width: calc(100% - 24px);
         }
@@ -142,8 +145,8 @@ export class TodoApp extends LitElement {
     this.addEventListener(AddProjectEvent.eventName, this.#onAddProject)
     this.addEventListener(SelectProjectEvent.eventName, this.#onSelectProject)
 
-  this.addEventListener(DataExportEvent.eventName, this.#onDataExport)
-  this.addEventListener(DataImportEvent.eventName, this.#onDataImport)
+    this.addEventListener(DataExportEvent.eventName, this.#onDataExport)
+    this.addEventListener(DataImportEvent.eventName, this.#onDataImport)
 
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
 
@@ -265,7 +268,10 @@ export class TodoApp extends LitElement {
             hidden: this.todos.length === 0,
             'theme-row': true,
           })}">
-          <ui-toggle label="Dark" .checked=${this.theme === 'dark'} data-action="theme"></ui-toggle>
+          <ui-toggle
+            label="Modo escuro"
+            .checked=${this.theme === 'dark'}
+            data-action="theme"></ui-toggle>
         </div>
 
         <data-panel></data-panel>
@@ -460,16 +466,14 @@ export class TodoApp extends LitElement {
   }
 }
 
-function safeParseStorageData(json: string):
-  | {
-      version: string
-      todos: any[]
-      projects: any[]
-      theme: any
-      selectedProjectId: string
-      exportedAt?: string
-    }
-  | null {
+function safeParseStorageData(json: string): {
+  version: string
+  todos: any[]
+  projects: any[]
+  theme: any
+  selectedProjectId: string
+  exportedAt?: string
+} | null {
   try {
     const data = JSON.parse(json) as any
     if (!data || typeof data !== 'object') return null

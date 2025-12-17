@@ -30,16 +30,16 @@ export class TodoForm extends LitElement {
           data-action="priority"
           .value=${this.priority}
           .options=${[
-            { value: 'low', label: 'Low' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'high', label: 'High' },
+            { value: 'low', label: 'Baixa' },
+            { value: 'medium', label: 'Média' },
+            { value: 'high', label: 'Alta' },
           ]}></ui-input>
 
         <ui-input
           type="date"
           data-action="dueDate"
           .value=${this.dueDate}
-          placeholder="Due date"></ui-input>
+          placeholder="Data limite"></ui-input>
       </div>
     `
   }

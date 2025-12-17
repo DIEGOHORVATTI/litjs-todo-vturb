@@ -22,7 +22,8 @@ export class ProjectForm extends LitElement {
 
   override render() {
     return html`
-      <div>
+      <div
+        style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-3); align-items: end;">
         <ui-input placeholder="Novo projeto" data-action="new-project"></ui-input>
         <ui-button data-action="add-project"></ui-button>
       </div>
