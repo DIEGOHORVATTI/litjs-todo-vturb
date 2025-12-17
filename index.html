@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-framework="lit" lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TodoMVC+: Lit with Closed Shadow DOM</title>
 
   <style>
@@ -25,9 +25,10 @@
         'Apple Color Emoji',
         'Segoe UI Emoji';
       line-height: 1.4em;
-      background: #f6f7fb;
-      color: #0f172a;
-      min-width: 320px;
+      background: var(--color-bg);
+      color: var(--color-text);
+      width: 100vw;
+      height: 100vh;
       margin: 0;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -40,7 +41,7 @@
     }
   </style>
 
-  <script type="module" src="./src/index.ts"></script>
+  <script type="module" src="./src/views/index.ts"></script>
 </head>
 
 <body>

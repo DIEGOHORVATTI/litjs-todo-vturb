@@ -1,14 +1,10 @@
 import { css } from 'lit'
 
-/**
- * Design tokens (CSS Custom Properties) for the app.
- *
- * Applied at the root (<todo-app>) so it cascades to internal components.
- */
 export const tokens = css`
   :host {
     /* Typography */
-    --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    --font-sans:
+      ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
       'Apple Color Emoji', 'Segoe UI Emoji';
 
     --text-xs: 12px;
@@ -52,9 +48,6 @@ export const tokens = css`
     --color-border: rgba(15, 23, 42, 0.12);
 
     --focus-ring: 0 0 0 3px rgba(234, 88, 12, 0.28);
-
-    /* Todo-specific */
-    --todo-max-width: 720px;
   }
 
   :host([data-theme='dark']) {

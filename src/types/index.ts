@@ -11,7 +11,9 @@ export interface Todo {
 
 export type Priority = 'low' | 'medium' | 'high'
 
-export type TodoEdit = Partial<Omit<Todo, 'id' | 'createdAt'>> & { id: string }
+export type TodoEdit = Partial<Omit<Todo, 'id' | 'createdAt'>> & {
+  id: string
+}
 
 export interface Project {
   id: string

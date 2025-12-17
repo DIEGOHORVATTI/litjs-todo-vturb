@@ -4,19 +4,29 @@
   "type": "module",
   "engines": {
     "node": ">=18.13.0",
-    "npm": ">=8.19.3"
+    "npm": ">=8.19.3",
+    "bun": ">=1.3.0"
+  },
+  "dependencies": {
+    "lit": "^3.3.1",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@web/dev-server-esbuild": "^1.0.4",
+    "@web/dev-server": "^0.4.6",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "dev": "wds",
-    "tsc": "tsc"
-  },
-  "devDependencies": {
-    "@web/dev-server": "^0.4.6",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "@web/dev-server-esbuild": "^1.0.4",
-    "lit": "^3.0.0-pre.0",
-    "tslib": "^2.5.2"
+    "build": "esbuild ./src/views/index.ts --bundle --minify --tree-shaking --target=es2020 --format=esm --outfile=dist/index.js --drop:console --drop:debugger && cp index.html dist/index.html && sed -i '' 's|\"\\./src/views/index\\.ts\"|\"\\./index\\.js\"|g' dist/index.html",
+    "start": "npx serve dist",
+    "format": "prettier --write .",
+    "test": "jest",
+    "test:watch": "jest --watch"
   }
 }

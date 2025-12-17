@@ -1,4 +1,4 @@
-import type { TodoEdit, Priority } from '../types/index.js'
+import type { Priority, TodoEdit } from '../types/index.js'
 import { AppEvent } from './base.js'
 
 export interface AddTodoPayload {
@@ -49,7 +49,7 @@ export class ToggleAllTodoEvent extends AppEvent<ToggleAllTodoPayload> {
   static readonly eventName = 'todo:toggle-all' as const
 
   constructor(payload: ToggleAllTodoPayload = {}) {
-    super(ToggleAllTodoEvent.eventName, payload)
+    super(ToggleAllTodoEvent.eventName, payload, { bubbles: true, composed: true })
   }
 }
 

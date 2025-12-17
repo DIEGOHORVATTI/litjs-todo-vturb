@@ -13,20 +13,17 @@ Utilizamos **Lit** como framework base para implementar Web Components.
 ### Justificativa
 
 1. **Web Standards First**
-
    - Lit é um wrapper fino sobre Web Components nativos
    - Produz custom elements reais, sem abstração pesada
    - Interoperabilidade: componentes podem ser usados em qualquer framework ou vanilla JS
 
 2. **Developer Experience**
-
    - Sistema reativo eficiente e simples
    - Templates declarativos com `html` tagged templates
    - TypeScript first-class support
    - Decorators reduzem boilerplate (@customElement, @property, @state)
 
 3. **Performance**
-
    - Biblioteca pequena (~5KB gzipped)
    - Atualizações granulares via fine-grained reactivity
    - Não re-renderiza todo o componente, apenas partes que mudaram
@@ -62,19 +59,16 @@ Comunicação entre componentes **exclusivamente via `CustomEvent` + `addEventLi
 ### Justificativa
 
 1. **Separação de Responsabilidades**
-
    - Componentes filhos não conhecem os handlers do pai
    - Componentes são completamente desacoplados
    - Facilita reuso: componente pode ser usado em contextos diferentes
 
 2. **Testabilidade**
-
    - Podemos testar componentes isoladamente
    - Mock de eventos é trivial: `dispatchEvent(new CustomEvent(...))`
    - Não precisamos instanciar componentes pais para testar filhos
 
 3. **Alinhamento com Web Standards**
-
    - `CustomEvent` é API nativa do browser
    - Funciona independente de framework
    - Padrão de comunicação universal (event bubbling, capture, etc.)
@@ -158,13 +152,11 @@ Utilizar **`shadowRootOptions: { mode: 'closed' }`** no componente principal (`<
 ### Justificativa
 
 1. **Encapsulamento Real**
-
    - `shadowRoot` não é exposto em `element.shadowRoot`
    - Força componentes a se comunicarem por API pública (props/methods/events)
    - Previne acesso direto a internals via JavaScript externo
 
 2. **Manutenibilidade**
-
    - Contrato claro: API pública é explícita
    - Refatorações internas não quebram consumidores
    - Menos superfície de API = menos breaking changes
@@ -178,7 +170,6 @@ Utilizar **`shadowRootOptions: { mode: 'closed' }`** no componente principal (`<
 #### ❌ **Desvantagens**
 
 1. **Testabilidade Reduzida**
-
    - Não podemos usar `shadowRoot.querySelector()` nos testes
    - **Solução**: Testar via API pública, eventos e data attributes
 
@@ -193,7 +184,6 @@ Utilizar **`shadowRootOptions: { mode: 'closed' }`** no componente principal (`<
    ```
 
 2. **DevTools Limitados**
-
    - Inspeção do Shadow DOM é mais difícil
    - **Solução**: Usar `mode: 'open'` em desenvolvimento, `closed` em produção (via build flag)
 
@@ -235,19 +225,16 @@ Todo o estado da aplicação vive no componente raiz (`<todo-app>`). Componentes
 ### Justificativa
 
 1. **Single Source of Truth**
-
    - Estado não fica espalhado por múltiplos componentes
    - Facilita debugging: um único lugar para inspecionar
    - Evita sincronização entre componentes
 
 2. **Previsibilidade**
-
    - Fluxo unidirecional: props down, events up
    - Mudanças de estado são explícitas (via event handlers)
    - Facilita reasoning sobre o comportamento da app
 
 3. **Persistência Simplificada**
-
    - Um único ponto para salvar/carregar estado do localStorage
    - Não precisamos sincronizar múltiplos stores
 
@@ -304,13 +291,11 @@ Usar **`localStorage`** para persistir `todos`, `projects`, `theme` e `selectedP
 ### Justificativa
 
 1. **Simplicidade**
-
    - API síncrona e simples
    - Não requer setup de backend
    - Suficiente para MVP
 
 2. **Disponibilidade**
-
    - Suportado em todos os browsers modernos
    - ~5-10MB de capacidade (suficiente para centenas de todos)
 
@@ -372,13 +357,11 @@ Implementar export/import do estado completo via **JSON download/upload**.
 ### Justificativa
 
 1. **Portabilidade**
-
    - Usuário pode fazer backup manual
    - Transferir dados entre dispositivos
    - Compartilhar listas com outros
 
 2. **Simplicidade**
-
    - JSON é formato universal
    - Não requer servidor
    - Fácil de implementar e testar
@@ -450,7 +433,6 @@ Implementar **4 filtros principais** com lógica no root component.
 ### Justificativa
 
 1. **Overdue é Feature Nova**
-
    - Diferencial do TodoMVC+
    - Demonstra capacidade de estender lógica
    - Use case real: gerenciamento de prazos
@@ -503,12 +485,10 @@ Adicionar **`priority: 'low' | 'medium' | 'high'`** e **`dueDate?: string`** ao 
 ### Justificativa
 
 1. **Features Solicitadas**
-
    - Parte explícita dos requisitos
    - Diferencia de TodoMVC vanilla
 
 2. **UX Value**
-
    - Prioridade: visual feedback (badges coloridos)
    - Due date: gerenciamento de prazos real
 
@@ -542,12 +522,10 @@ Usar **CSS Custom Properties** para todo o design system.
 ### Justificativa
 
 1. **Requisito Explícito**
-
    - Demonstra conhecimento de CSS moderno
    - Permite theme switching dinâmico
 
 2. **Performance**
-
    - Mudança de tema via CSS é instantânea (sem re-render)
    - Browser otimiza repaint
 
@@ -597,7 +575,6 @@ Usar **Jest** com **`@web/test-runner`** para ambiente de testes.
 ### Justificativa
 
 1. **Jest = Padrão da Indústria**
-
    - Familiaridade
    - Ecossistema maduro
    - Boas mensagens de erro

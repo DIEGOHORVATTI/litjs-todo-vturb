@@ -1,9 +1,5 @@
 import { css } from 'lit'
 
-/**
- * Base styles shared across components.
- * Keep it small: reset + accessibility + consistent defaults.
- */
 export const baseStyles = css`
   :host {
     font-family: var(--font-sans);
@@ -24,14 +20,29 @@ export const baseStyles = css`
     color: inherit;
   }
 
-  a {
-    color: inherit;
+  input,
+  select,
+  textarea {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    outline: none;
   }
 
-  :focus-visible {
-    outline: none;
+  input:focus,
+  select:focus,
+  textarea:focus {
     box-shadow: var(--focus-ring);
-    border-radius: 8px;
+    border-color: color-mix(in oklab, var(--color-accent), transparent 55%);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-muted);
+  }
+
+  a {
+    color: inherit;
   }
 
   ::selection {

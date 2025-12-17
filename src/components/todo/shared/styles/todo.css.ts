@@ -1,6 +1,5 @@
 import { css } from 'lit'
 
-//  Styles used in more than one element.
 export const todoStyles = css`
   button {
     margin: 0;
@@ -17,13 +16,6 @@ export const todoStyles = css`
     appearance: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  :focus,
-  .toggle:focus + label,
-  .toggle-all:focus + label {
-    box-shadow: var(--focus-ring);
-    outline: 0;
   }
 
   .new-todo,
@@ -47,34 +39,9 @@ export const todoStyles = css`
   }
 
   .new-todo {
-    padding: 16px 16px 16px 60px;
+    padding-left: 40px;
     border: none;
     background: transparent;
     box-shadow: none;
-  }
-
-  /*
-	Hack to remove background from Mobile Safari.
-	Can't use it globally since it destroys checkboxes in Firefox
-	*/
-  @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    .toggle-all,
-    li .toggle {
-      background: none;
-    }
-
-    li .toggle {
-      height: 40px;
-    }
-  }
-
-  @media (max-width: 430px) {
-    .footer {
-      height: 50px;
-    }
-
-    .filters {
-      bottom: 10px;
-    }
   }
 `
