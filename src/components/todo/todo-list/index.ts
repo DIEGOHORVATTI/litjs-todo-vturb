@@ -1,4 +1,4 @@
-import { html, LitElement, nothing } from 'lit'
+import { html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { property } from 'lit/decorators/property.js'
 import { repeat } from 'lit/directives/repeat.js'
@@ -33,17 +33,13 @@ export class TodoList extends LitElement {
 
   override render() {
     return html`
-      ${this.todos.length > 0
-        ? html`
-            <input
-              id="toggle-all"
-              type="checkbox"
-              class="toggle-all"
-              .checked=${this.allCompleted}
-              data-action="toggle-all" />
-            <label for="toggle-all"> Mark all as complete </label>
-          `
-        : nothing}
+      <input
+        id="toggle-all"
+        type="checkbox"
+        class="toggle-all"
+        .checked=${this.allCompleted}
+        data-action="toggle-all" />
+      <label for="toggle-all"> Mark all as complete </label>
 
       <ul class="todo-list">
         ${repeat(
@@ -59,7 +55,7 @@ export class TodoList extends LitElement {
     const target = e.target as HTMLElement | null
     if (!target) return
     if (target instanceof HTMLInputElement && target.dataset.action === 'toggle-all') {
-      this.dispatchEvent(new ToggleAllTodoEvent())
+      this.dispatchEvent(new ToggleAllTodoEvent({ completed: target.checked }))
     }
   }
 }

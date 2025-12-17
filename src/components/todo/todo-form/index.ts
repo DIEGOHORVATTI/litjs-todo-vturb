@@ -3,13 +3,12 @@ import { customElement } from 'lit/decorators/custom-element.js'
 
 import { AddTodoEvent } from '../../../events/todo-events.js'
 import { todoStyles } from '../todo.css.js'
-import { todoFormStyles } from './styles.css.js'
 
 import '../../ui/ui-input/index.js'
 
 @customElement('todo-form')
 export class TodoForm extends LitElement {
-  static override styles = [todoStyles, todoFormStyles]
+  static override styles = todoStyles
 
   override render() {
     return html`

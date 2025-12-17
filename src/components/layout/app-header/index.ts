@@ -11,6 +11,14 @@ import { ThemeChangeEvent } from '../../../events/theme-events.js'
 export class AppHeader extends LitElement {
   static override styles = appHeaderStyles
 
+  override firstUpdated(): void {
+    // Sync initial toggle state from the app theme so UI reflects persisted theme.
+    const app = this.closest('todo-app') as HTMLElement | null
+    const isDark = app?.dataset.theme === 'dark'
+    const toggle = this.shadowRoot?.querySelector('ui-toggle[data-action="theme"]') as any
+    if (toggle) toggle.checked = isDark
+  }
+
   override connectedCallback(): void {
     super.connectedCallback()
     this.addEventListener('ui-toggle', this.#onUiToggle as EventListener)
@@ -24,10 +32,8 @@ export class AppHeader extends LitElement {
   override render() {
     return html`
       <header class="header">
-        <h1>todos</h1>
-        <div class="actions">
-          <ui-toggle label="Dark" data-action="theme"></ui-toggle>
-        </div>
+        <ui-toggle label="Dark" data-action="theme"></ui-toggle>
+
         <slot></slot>
       </header>
     `

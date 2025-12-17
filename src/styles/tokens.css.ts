@@ -53,9 +53,6 @@ export const tokens = css`
     --color-border: rgba(15, 23, 42, 0.12);
 
     --focus-ring: 0 0 0 3px rgba(234, 88, 12, 0.28);
-
-    /* Todo-specific */
-    --todo-max-width: 720px;
   }
 
   :host([data-theme='dark']) {

@@ -34,7 +34,6 @@ export class TodoApp extends LitElement {
     css`
       :host {
         display: block;
-        max-width: var(--todo-max-width);
         margin: 96px auto var(--space-6) auto;
         background: var(--color-surface);
         border: 1px solid var(--color-border);
@@ -42,6 +41,7 @@ export class TodoApp extends LitElement {
         box-shadow: var(--shadow-2);
         overflow: hidden;
       }
+
       main {
         position: relative;
         z-index: 2;
@@ -53,11 +53,6 @@ export class TodoApp extends LitElement {
       }
       :focus {
         box-shadow: none !important;
-      }
-
-      /* Provide a nice page background even when the body is outside our shadow DOM */
-      :host {
-        background-color: var(--color-surface);
       }
     `,
   ]
@@ -120,7 +115,7 @@ export class TodoApp extends LitElement {
     const allCompleted = this.todos.length > 0 && completedCount === this.todos.length
 
     return html`
-      <section>
+      <section style="width: 500px;">
         <app-header>
           <todo-form></todo-form>
         </app-header>
