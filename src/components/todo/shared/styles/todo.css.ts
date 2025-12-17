@@ -1,6 +1,5 @@
 import { css } from 'lit'
 
-//  Styles used in more than one element.
 export const todoStyles = css`
   button {
     margin: 0;
@@ -17,13 +16,6 @@ export const todoStyles = css`
     appearance: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  :focus,
-  .toggle:focus + label,
-  .toggle-all:focus + label {
-    box-shadow: var(--focus-ring);
-    outline: 0;
   }
 
   .new-todo,

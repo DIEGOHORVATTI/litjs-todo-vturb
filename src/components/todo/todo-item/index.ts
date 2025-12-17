@@ -6,7 +6,7 @@ import { classMap } from 'lit/directives/class-map.js'
 
 import { RemoveTodoEvent, UpdateTodoEvent } from '../../../events/todo-events.js'
 import type { Todo } from '../../../types/index.js'
-import { todoStyles } from '../todo.css.js'
+import { todoStyles } from '../shared/styles/todo.css.js'
 import { todoItemStyles } from './styles.css.js'
 
 @customElement('todo-item')

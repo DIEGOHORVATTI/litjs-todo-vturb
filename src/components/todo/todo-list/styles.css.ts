@@ -5,16 +5,12 @@ import { todoItemCheckboxStyles } from '../../../styles/todo-checkbox.css.js'
 export const todoListStyles = css`
   ${todoItemCheckboxStyles}
 
-  :focus {
-    box-shadow: none !important;
-  }
-
   .new-todo-row {
     position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 12px;
+    padding: 10px 0px;
     border-bottom: 1px solid var(--color-border);
     background: var(--color-surface);
   }

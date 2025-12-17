@@ -4,7 +4,7 @@ import { property } from 'lit/decorators/property.js'
 import { repeat } from 'lit/directives/repeat.js'
 
 import type { Todo } from '../../../types/index.js'
-import { todoStyles } from '../todo.css.js'
+import { todoStyles } from '../shared/styles/todo.css.js'
 import { todoListStyles } from './styles.css.js'
 
 import '../todo-item/index.js'

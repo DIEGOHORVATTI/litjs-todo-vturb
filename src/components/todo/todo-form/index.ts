@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 
 import { AddTodoEvent } from '../../../events/todo-events.js'
-import { todoStyles } from '../todo.css.js'
+import { todoStyles } from '../shared/styles/todo.css.js'
 
 import '../../ui/ui-input/index.js'
 

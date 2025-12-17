@@ -3,7 +3,7 @@ import { customElement } from 'lit/decorators/custom-element.js'
 import { state } from 'lit/decorators/state.js'
 import { classMap } from 'lit/directives/class-map.js'
 
-import { todoStyles } from './components/todo/todo.css.js'
+import { todoStyles } from './components/todo/shared/styles/todo.css.js'
 import { createContainer } from './di/container.js'
 import { CONSTANTS } from './shared/constants/config.js'
 import { baseStyles } from './styles/base.css.js'
@@ -48,11 +48,9 @@ export class TodoApp extends LitElement {
         border-top: 1px solid var(--color-border);
         background: var(--color-surface);
       }
+
       .hidden {
         display: none;
-      }
-      :focus {
-        box-shadow: none !important;
       }
     `,
   ]

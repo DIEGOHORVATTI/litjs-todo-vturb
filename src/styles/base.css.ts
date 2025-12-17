@@ -28,12 +28,6 @@ export const baseStyles = css`
     color: inherit;
   }
 
-  :focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-    border-radius: 8px;
-  }
-
   ::selection {
     background: rgba(234, 88, 12, 0.25);
   }

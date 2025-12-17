@@ -5,7 +5,7 @@ import { classMap } from 'lit/directives/class-map.js'
 
 import { ClearCompletedEvent } from '../../../events/todo-events.js'
 import type { FilterMode as TodoFilter } from '../../../types/index.js'
-import { todoStyles } from '../todo.css.js'
+import { todoStyles } from '../shared/styles/todo.css.js'
 import { todoFooterStyles } from './styles.css.js'
 
 export type TodoFilterSelectedDetail = {
