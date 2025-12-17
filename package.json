@@ -24,6 +24,7 @@
   "scripts": {
     "dev": "wds",
     "build": "esbuild src/views/index.ts --bundle --minify --tree-shaking=true --outdir=dist",
+    "start": "npx serve dist",
     "format": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch"
