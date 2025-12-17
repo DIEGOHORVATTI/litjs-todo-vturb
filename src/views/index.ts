@@ -62,6 +62,22 @@ export class TodoApp extends LitElement {
         background: var(--color-surface);
       }
 
+      todo-list::part(new-todo-row),
+      todo-list .new-todo-row,
+      todo-form {
+        padding-right: var(--space-2);
+      }
+
+      .theme-row {
+        display: flex;
+        justify-content: flex-end;
+        padding: var(--space-3) var(--space-4);
+        border-top: 1px solid var(--color-border);
+        background: var(--color-surface);
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
+      }
+
       .hidden {
         display: none;
       }

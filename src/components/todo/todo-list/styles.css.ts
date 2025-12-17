@@ -10,7 +10,7 @@ export const todoListStyles = css`
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 0px;
+    padding: 10px var(--space-2);
     border-bottom: 1px solid var(--color-border);
     background: var(--color-surface);
   }
