@@ -43,6 +43,11 @@ export class TodoItem extends LitElement {
       editing: this.isEditing,
     }
 
+    const due = this.todo.dueDate ? new Date(this.todo.dueDate) : null
+    const dueValid = !!due && !Number.isNaN(due.getTime())
+    const isOverdue =
+      !this.todo.completed && dueValid && (due as Date).getTime() < new Date().getTime()
+
     return html`
       <li class="${classMap(itemClassList)}">
         <div class="view">
@@ -54,6 +59,16 @@ export class TodoItem extends LitElement {
 
           <label>
             <span data-action="begin-edit"> ${this.todo.title} </span>
+            <span class="meta" aria-hidden="true">
+              <span class="badge" data-priority=${this.todo.priority}>
+                ${this.todo.priority}
+              </span>
+              ${dueValid
+                ? html`<span class="badge" data-due=${isOverdue ? 'overdue' : 'ok'}>
+                    ${formatDueDate(due as Date)}
+                  </span>`
+                : null}
+            </span>
           </label>
 
           <button data-action="delete" class="destroy"></button>
@@ -109,7 +124,7 @@ export class TodoItem extends LitElement {
     const target = e.target as HTMLElement | null
     if (!target) return
     if (target.dataset.action === 'edit') {
-      this.#abortEdit(e)
+      this.#finishEditWithInput(target as HTMLInputElement)
     }
   }
 
@@ -133,7 +148,21 @@ export class TodoItem extends LitElement {
   }
 
   #finishEditWithInput(el: HTMLInputElement) {
-    const title = el.value
+    const title = el.value.trim()
+
+    // TodoMVC behavior: empty title removes the todo.
+    if (!title) {
+      this.#deleteTodo()
+      this.isEditing = false
+      return
+    }
+
+    // Avoid unnecessary updates when nothing changed.
+    if (title === this.todo.title) {
+      this.isEditing = false
+      return
+    }
+
     this.dispatchEvent(new UpdateTodoEvent({ id: this.todo.id, changes: { title } }))
     this.isEditing = false
   }
@@ -157,4 +186,12 @@ export class TodoItem extends LitElement {
     if (action === 'delete' || action === 'toggle') return action
     return null
   }
+}
+
+function formatDueDate(d: Date): string {
+  // Render as YYYY-MM-DD for consistency.
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
 }

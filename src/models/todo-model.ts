@@ -55,6 +55,16 @@ export class TodoModel {
         return this.#todos.filter((t) => !t.completed)
       case 'completed':
         return this.#todos.filter((t) => t.completed)
+      case 'overdue': {
+        const now = new Date()
+        return this.#todos.filter((t) => {
+          if (t.completed) return false
+          if (!t.dueDate) return false
+          const due = new Date(t.dueDate)
+          if (Number.isNaN(due.getTime())) return false
+          return due.getTime() < now.getTime()
+        })
+      }
       default:
         return this.#todos
     }

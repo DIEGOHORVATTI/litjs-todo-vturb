@@ -49,6 +49,11 @@ export class TodoFooter extends LitElement {
       filter: 'completed',
       selectedFilter: this.filter,
     })
+    const overdueFilter = filterLink({
+      text: 'Atrasados',
+      filter: 'overdue',
+      selectedFilter: this.filter,
+    })
 
     return html`
       <span class="todo-count">
@@ -60,7 +65,7 @@ export class TodoFooter extends LitElement {
         ${this.completedCount
           ? html`<a data-action="clear-completed" class="clear-completed">Limpar concluídas</a>`
           : nothing}
-        ${allFilter} ${activeFilter} ${completedFilter}
+        ${allFilter} ${activeFilter} ${completedFilter} ${overdueFilter}
       </div>
     `
   }

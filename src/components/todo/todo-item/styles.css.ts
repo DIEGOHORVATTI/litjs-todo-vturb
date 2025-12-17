@@ -54,6 +54,48 @@ export const todoItemStyles = css`
     color: var(--color-text);
   }
 
+  .meta {
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    text-transform: capitalize;
+  }
+
+  .badge[data-priority='low'] {
+    border-color: color-mix(in oklab, var(--color-accent), transparent 65%);
+    background: color-mix(in oklab, var(--color-accent), transparent 88%);
+  }
+
+  .badge[data-priority='medium'] {
+    border-color: color-mix(in oklab, var(--color-warning, #c27a00), transparent 55%);
+    background: color-mix(in oklab, var(--color-warning, #c27a00), transparent 88%);
+  }
+
+  .badge[data-priority='high'] {
+    border-color: color-mix(in oklab, var(--color-danger, #b42318), transparent 55%);
+    background: color-mix(in oklab, var(--color-danger, #b42318), transparent 88%);
+  }
+
+  .badge[data-due='overdue'] {
+    border-color: color-mix(in oklab, var(--color-danger, #b42318), transparent 55%);
+    background: color-mix(in oklab, var(--color-danger, #b42318), transparent 90%);
+  }
+
   .completed label {
     color: var(--color-muted);
     text-decoration: line-through;

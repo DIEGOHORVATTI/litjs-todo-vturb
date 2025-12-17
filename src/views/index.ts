@@ -4,6 +4,7 @@ import { state } from 'lit/decorators/state.js'
 import { classMap } from 'lit/directives/class-map.js'
 
 import { todoStyles } from '../components/todo/shared/styles/todo.css.js'
+import { ProjectController } from '../controllers/project-controller.js'
 import { ThemeController } from '../controllers/theme-controller.js'
 import { TodoController } from '../controllers/todo-controller.js'
 import { ThemeModel } from '../models/theme-model.js'
@@ -12,14 +13,17 @@ import { createServices } from '../services/create-services.js'
 import { CONSTANTS } from '../shared/constants/config.js'
 import { baseStyles } from '../styles/base.css.js'
 import { tokens } from '../styles/tokens.css.js'
-import type { FilterMode, Todo } from '../types/index.js'
+import type { FilterMode, Project, Todo } from '../types/index.js'
 
 import '../components/layout/app-header/index.js'
 import '../components/todo/todo-list/index.js'
 import '../components/todo/todo-form/index.js'
 import '../components/todo/todo-footer/index.js'
 import '../components/ui/ui-toggle/index.js'
+import '../components/projects/project-picker/index.js'
+import '../components/projects/project-form/index.js'
 
+import { AddProjectEvent, SelectProjectEvent } from '../events/project-events.js'
 import { ThemeChangeEvent } from '../events/theme-events.js'
 import {
   AddTodoEvent,
@@ -47,7 +51,7 @@ export class TodoApp extends LitElement {
       }
 
       section {
-        width: 600px;
+        width: 800px;
         margin: 0 auto;
         background: var(--color-surface);
         border: 1px solid var(--color-border);
@@ -87,6 +91,12 @@ export class TodoApp extends LitElement {
   private filter: FilterMode = 'all'
 
   @state()
+  private projects: Project[] = []
+
+  @state()
+  private selectedProjectId: string = 'all'
+
+  @state()
   private theme: 'light' | 'dark' = 'light'
 
   #services = createServices()
@@ -94,6 +104,7 @@ export class TodoApp extends LitElement {
   #themeModel = new ThemeModel()
   #todoController = new TodoController(this.#services, this.#todoModel)
   #themeController = new ThemeController(this.#themeModel)
+  #projectController = new ProjectController(this.#services)
 
   constructor() {
     super()
@@ -105,6 +116,9 @@ export class TodoApp extends LitElement {
     this.addEventListener(ClearCompletedEvent.eventName, this.#onClearCompleted)
 
     this.addEventListener('todo-filter:selected', this.#onFilterSelected as EventListener)
+
+    this.addEventListener(AddProjectEvent.eventName, this.#onAddProject)
+    this.addEventListener(SelectProjectEvent.eventName, this.#onSelectProject)
 
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
 
@@ -163,6 +177,7 @@ export class TodoApp extends LitElement {
     super.connectedCallback()
 
     this.#hydrateTodos()
+    this.#hydrateProjects()
 
     window.addEventListener('hashchange', this.#onHashChange)
     this.#onHashChange()
@@ -190,9 +205,17 @@ export class TodoApp extends LitElement {
       <section>
         <app-header class="hidden"></app-header>
 
+        <div
+          style="padding: var(--space-3) var(--space-4); display: flex; gap: var(--space-3); align-items: flex-end;">
+          <project-picker
+            .projects=${this.projects}
+            .selectedProjectId=${this.selectedProjectId}></project-picker>
+          <project-form></project-form>
+        </div>
+
         <main class="main">
           <todo-list class="show-priority" .todos=${filteredTodos} .allCompleted=${allCompleted}>
-            <todo-form slot="new-todo"></todo-form>
+            <todo-form slot="new-todo" .projectId=${this.selectedProjectId}></todo-form>
           </todo-list>
         </main>
 
@@ -264,16 +287,40 @@ export class TodoApp extends LitElement {
     this.requestUpdate()
   }
 
+  async #hydrateProjects() {
+    const { projects, selectedProjectId } = await this.#projectController.hydrate()
+    this.projects = projects
+    this.selectedProjectId = selectedProjectId || 'all'
+    this.requestUpdate()
+  }
+
   #filteredTodos(): Todo[] {
     this.#todoModel.setTodos(this.todos)
     this.#todoModel.setFilter(this.filter)
-    return this.#todoModel.getFilteredTodos()
+
+    const byFilter = this.#todoModel.getFilteredTodos()
+    if (this.selectedProjectId === 'all') return byFilter
+    return byFilter.filter((t) => t.projectId === this.selectedProjectId)
+  }
+
+  #onAddProject(e: AddProjectEvent) {
+    void this.#projectController.addProject(e.payload).then((projects) => {
+      this.projects = projects
+      this.requestUpdate()
+    })
+  }
+
+  #onSelectProject(e: SelectProjectEvent) {
+    void this.#projectController.selectProject(e.payload).then((selectedProjectId) => {
+      this.selectedProjectId = selectedProjectId
+      this.requestUpdate()
+    })
   }
 }
 
 function parseFilterFromHash(hash: string): FilterMode {
   const raw = (hash ?? '').replace(/^#\/?/, '').trim().toLowerCase()
-  if (raw === 'active' || raw === 'completed' || raw === 'all') return raw
+  if (raw === 'active' || raw === 'completed' || raw === 'all' || raw === 'overdue') return raw
   return 'all'
 }
 
