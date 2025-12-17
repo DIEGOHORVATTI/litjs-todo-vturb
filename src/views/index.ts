@@ -22,8 +22,10 @@ import '../components/todo/todo-footer/index.js'
 import '../components/ui/ui-toggle/index.js'
 import '../components/projects/project-picker/index.js'
 import '../components/projects/project-form/index.js'
+import '../components/data/data-panel/index.js'
 
 import { AddProjectEvent, SelectProjectEvent } from '../events/project-events.js'
+import { DataExportEvent, DataImportEvent } from '../events/data-events.js'
 import { ThemeChangeEvent } from '../events/theme-events.js'
 import {
   AddTodoEvent,
@@ -80,6 +82,26 @@ export class TodoApp extends LitElement {
       .hidden {
         display: none;
       }
+
+      .projects-row {
+        padding: var(--space-3) var(--space-4);
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: var(--space-4);
+        align-items: end;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-surface);
+      }
+
+      @media (max-width: 860px) {
+        section {
+          width: calc(100% - 24px);
+        }
+
+        .projects-row {
+          grid-template-columns: 1fr;
+        }
+      }
     `,
   ]
 
@@ -119,6 +141,9 @@ export class TodoApp extends LitElement {
 
     this.addEventListener(AddProjectEvent.eventName, this.#onAddProject)
     this.addEventListener(SelectProjectEvent.eventName, this.#onSelectProject)
+
+  this.addEventListener(DataExportEvent.eventName, this.#onDataExport)
+  this.addEventListener(DataImportEvent.eventName, this.#onDataImport)
 
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
 
@@ -182,10 +207,19 @@ export class TodoApp extends LitElement {
     window.addEventListener('hashchange', this.#onHashChange)
     this.#onHashChange()
 
-    const stored = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY)
-    if (stored === 'dark' || stored === 'light') {
-      this.theme = stored
-      this.#themeModel.setTheme(stored)
+    // Theme is persisted inside the main app state (STATE_KEY).
+    const raw = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY)
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as { theme?: unknown }
+        const stored = parsed.theme
+        if (stored === 'dark' || stored === 'light') {
+          this.theme = stored
+          this.#themeModel.setTheme(stored)
+        }
+      } catch {
+        // ignore
+      }
     }
     this.dataset.theme = this.theme
   }
@@ -205,8 +239,7 @@ export class TodoApp extends LitElement {
       <section>
         <app-header class="hidden"></app-header>
 
-        <div
-          style="padding: var(--space-3) var(--space-4); display: flex; gap: var(--space-3); align-items: flex-end;">
+        <div class="projects-row">
           <project-picker
             .projects=${this.projects}
             .selectedProjectId=${this.selectedProjectId}></project-picker>
@@ -234,8 +267,82 @@ export class TodoApp extends LitElement {
           })}">
           <ui-toggle label="Dark" .checked=${this.theme === 'dark'} data-action="theme"></ui-toggle>
         </div>
+
+        <data-panel></data-panel>
       </section>
     `
+  }
+
+  #onDataExport(_e: DataExportEvent) {
+    const data = this.#snapshotState({ includeExportedAt: true })
+    const json = JSON.stringify(data, null, 2)
+
+    // Put JSON into panel textarea if open.
+    const panel = this.shadowRoot?.querySelector('data-panel') as any
+    const textarea = panel?.shadowRoot?.querySelector('textarea[data-action="json"]') as
+      | HTMLTextAreaElement
+      | undefined
+
+    if (textarea) {
+      textarea.value = json
+      // Keep internal state in sync.
+      panel.value = json
+    }
+
+    // Trigger a download.
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `todomvc-plus-export-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  #onDataImport(e: DataImportEvent) {
+    const raw = (e.payload?.json ?? '').trim()
+    if (!raw) return
+
+    const parsed = safeParseStorageData(raw)
+    if (!parsed) return
+
+    window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY, JSON.stringify(parsed))
+
+    // Apply to UI state and re-render.
+    this.todos = [...parsed.todos]
+    this.projects = [...parsed.projects]
+    this.selectedProjectId = parsed.selectedProjectId ?? 'all'
+    if (parsed.theme === 'dark' || parsed.theme === 'light') {
+      this.theme = parsed.theme
+      this.dataset.theme = this.theme
+    }
+
+    this.requestUpdate()
+  }
+
+  #snapshotState(opts: { includeExportedAt: boolean }) {
+    const raw = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY)
+    let base: any = {}
+    if (raw) {
+      try {
+        base = JSON.parse(raw)
+      } catch {
+        base = {}
+      }
+    }
+
+    const snapshot = {
+      version: base.version ?? CONSTANTS.STORAGE_DEFAULTS.VERSION,
+      todos: [...this.todos],
+      projects: [...this.projects],
+      theme: this.theme,
+      selectedProjectId: this.selectedProjectId,
+      ...(opts.includeExportedAt ? { exportedAt: new Date().toISOString() } : {}),
+    }
+
+    // Persist snapshot, keeping app state consistent.
+    window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY, JSON.stringify(snapshot))
+    return snapshot
   }
 
   #onAddTodo(e: AddTodoEvent) {
@@ -278,7 +385,42 @@ export class TodoApp extends LitElement {
   #onThemeChange(e: ThemeChangeEvent) {
     this.theme = this.#themeController.setTheme(e.payload.theme)
     this.dataset.theme = this.theme
-    window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY, this.theme)
+
+    // Persist theme inside the main app state object.
+    const raw = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY)
+    if (!raw) {
+      window.localStorage.setItem(
+        CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY,
+        JSON.stringify({
+          version: CONSTANTS.STORAGE_DEFAULTS.VERSION,
+          todos: [],
+          projects: [],
+          selectedProjectId: CONSTANTS.STORAGE_DEFAULTS.SELECTED_PROJECT_ID,
+          theme: this.theme,
+        })
+      )
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(raw) as any
+      window.localStorage.setItem(
+        CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY,
+        JSON.stringify({ ...parsed, theme: this.theme })
+      )
+    } catch {
+      // If state is corrupted, rewrite a minimal valid state.
+      window.localStorage.setItem(
+        CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY,
+        JSON.stringify({
+          version: CONSTANTS.STORAGE_DEFAULTS.VERSION,
+          todos: [],
+          projects: [],
+          selectedProjectId: CONSTANTS.STORAGE_DEFAULTS.SELECTED_PROJECT_ID,
+          theme: this.theme,
+        })
+      )
+    }
   }
 
   async #hydrateTodos() {
@@ -315,6 +457,57 @@ export class TodoApp extends LitElement {
       this.selectedProjectId = selectedProjectId
       this.requestUpdate()
     })
+  }
+}
+
+function safeParseStorageData(json: string):
+  | {
+      version: string
+      todos: any[]
+      projects: any[]
+      theme: any
+      selectedProjectId: string
+      exportedAt?: string
+    }
+  | null {
+  try {
+    const data = JSON.parse(json) as any
+    if (!data || typeof data !== 'object') return null
+    if (!Array.isArray(data.todos) || !Array.isArray(data.projects)) return null
+    if (typeof data.selectedProjectId !== 'string') return null
+    if (typeof data.version !== 'string') return null
+
+    // Minimal todo shape validation
+    for (const t of data.todos) {
+      if (!t || typeof t !== 'object') return null
+      if (typeof t.id !== 'string') return null
+      if (typeof t.title !== 'string') return null
+      if (typeof t.completed !== 'boolean') return null
+      if (typeof t.projectId !== 'string') return null
+      if (t.priority !== 'low' && t.priority !== 'medium' && t.priority !== 'high') return null
+      if (t.dueDate !== undefined && typeof t.dueDate !== 'string') return null
+      if (typeof t.createdAt !== 'string' || typeof t.updatedAt !== 'string') return null
+    }
+
+    for (const p of data.projects) {
+      if (!p || typeof p !== 'object') return null
+      if (typeof p.id !== 'string' || typeof p.name !== 'string') return null
+    }
+
+    // Theme
+    const theme = data.theme
+    if (theme !== 'light' && theme !== 'dark' && theme !== 'auto') return null
+
+    return {
+      version: data.version,
+      todos: data.todos,
+      projects: data.projects,
+      theme: data.theme,
+      selectedProjectId: data.selectedProjectId,
+      ...(typeof data.exportedAt === 'string' ? { exportedAt: data.exportedAt } : {}),
+    }
+  } catch {
+    return null
   }
 }
 

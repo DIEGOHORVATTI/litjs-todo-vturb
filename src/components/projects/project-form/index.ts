@@ -24,7 +24,7 @@ export class ProjectForm extends LitElement {
     return html`
       <div>
         <ui-input placeholder="Novo projeto" data-action="new-project"></ui-input>
-        <ui-button label="Adicionar" data-action="add-project"></ui-button>
+        <ui-button data-action="add-project"></ui-button>
       </div>
     `
   }

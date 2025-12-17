@@ -1,8 +1,8 @@
 import { LocalStorageTodoRepository } from './localstorage-todo-repository.js'
 import { LocalStorageTodoStorage } from './localstorage-todo-storage.js'
-import { StorageProjectRepository } from './storage-project-repository.js'
 import { createProjectUseCases } from './project-usecases.js'
 import type { ProjectUseCases } from './project-usecases.js'
+import { StorageProjectRepository } from './storage-project-repository.js'
 import { createTodoUseCases } from './todo-usecases.js'
 import type { TodoUseCases } from './todo-usecases.js'
 

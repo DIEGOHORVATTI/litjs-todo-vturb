@@ -1,5 +1,5 @@
-import type { Project } from '../types/index.js'
 import type { ProjectRepository } from '../models/project-repository.js'
+import type { Project } from '../types/index.js'
 import type { TodoStorage } from './todo-storage.js'
 
 export class StorageProjectRepository implements ProjectRepository {

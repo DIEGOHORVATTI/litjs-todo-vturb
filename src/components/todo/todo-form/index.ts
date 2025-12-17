@@ -6,6 +6,7 @@ import { AddTodoEvent } from '../../../events/todo-events.js'
 import { todoStyles } from '../shared/styles/todo.css.js'
 
 import '../../ui/ui-input/index.js'
+
 import type { Priority } from '../../../types/index.js'
 
 @customElement('todo-form')
@@ -20,7 +21,8 @@ export class TodoForm extends LitElement {
 
   override render() {
     return html`
-      <div style="display: grid; grid-template-columns: 1fr 180px 180px; gap: var(--space-3); align-items: end;">
+      <div
+        style="display: grid; grid-template-columns: 1fr 180px 180px; gap: var(--space-3); align-items: end;">
         <ui-input placeholder="Qual a nova tarefa?" data-action="new-todo"></ui-input>
 
         <ui-input

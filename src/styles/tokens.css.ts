@@ -52,8 +52,9 @@ export const tokens = css`
 
   :host([data-theme='dark']) {
     --color-bg: #0b1020;
-    --color-surface: #0f172a;
-    --color-surface-2: #111c36;
+    /* Slightly lighter surfaces to match input fields and improve contrast */
+    --color-surface: #121c33;
+    --color-surface-2: #172446;
     --color-text: #e5e7eb;
     --color-muted: #a1a1aa;
     --color-border: rgba(226, 232, 240, 0.12);

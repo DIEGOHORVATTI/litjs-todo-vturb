@@ -1,12 +1,43 @@
-import { html, LitElement } from 'lit'
+import { css, html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 import { property } from 'lit/decorators/property.js'
 
-import type { Project } from '../../../types/index.js'
 import { SelectProjectEvent } from '../../../events/project-events.js'
+import type { Project } from '../../../types/index.js'
 
 @customElement('project-picker')
 export class ProjectPicker extends LitElement {
+  static override styles = [
+    css`
+      :host {
+        display: block;
+        min-width: 240px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: var(--text-sm);
+        color: var(--color-muted);
+      }
+
+      input {
+        height: 40px;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--color-border);
+        background: var(--color-surface-2);
+        color: var(--color-text);
+      }
+
+      input:focus {
+        outline: 0;
+        box-shadow: var(--focus-ring);
+        border-color: color-mix(in oklab, var(--color-accent), transparent 55%);
+      }
+    `,
+  ]
+
   @property({ type: Array }) projects: Project[] = []
 
   @property({ type: String }) selectedProjectId: string = 'all'
@@ -61,7 +92,6 @@ export class ProjectPicker extends LitElement {
     if (!input) return
     if (input.dataset.action !== 'select-project') return
 
-    // Only emit selection when it matches a known option.
     this.#emitSelectionFromInput(input.value, { strict: true })
   }
 
@@ -82,7 +112,7 @@ export class ProjectPicker extends LitElement {
     const match = this.projects.find((p) => p.name.toLowerCase() === lowers)
     if (!match) {
       if (opts.strict) return
-      // If user typed a raw id, allow it.
+
       this.dispatchEvent(new SelectProjectEvent({ projectId: value }))
       return
     }
