@@ -12,7 +12,6 @@ export class AppHeader extends LitElement {
   static override styles = appHeaderStyles
 
   override firstUpdated(): void {
-    // Sync initial toggle state from the app theme so UI reflects persisted theme.
     const app = this.closest('todo-app') as HTMLElement | null
     const isDark = app?.dataset.theme === 'dark'
     const toggle = this.shadowRoot?.querySelector('ui-toggle[data-action="theme"]') as any

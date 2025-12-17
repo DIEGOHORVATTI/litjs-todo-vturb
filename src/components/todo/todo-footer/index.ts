@@ -61,9 +61,10 @@ export class TodoFooter extends LitElement {
         <li>${activeFilter}</li>
         <li>${completedFilter}</li>
       </ul>
+
       ${this.completedCount > 0
         ? html`<button data-action="clear-completed" class="clear-completed">
-            Clear Completed
+            Limpar concluídas
           </button>`
         : nothing}
     `
@@ -101,12 +102,10 @@ function getAnchorFromEvent(e: Event): HTMLAnchorElement | null {
   for (const node of path) {
     if (!(node instanceof HTMLElement)) continue
 
-    // Direct click on the <a>
     if (node instanceof HTMLAnchorElement && node.dataset.action === 'set-filter') {
       return node
     }
 
-    // Click on descendants inside the <a>
     const a = node.closest?.('a[data-action="set-filter"]')
     if (a instanceof HTMLAnchorElement) return a
   }

@@ -63,9 +63,6 @@ export class TodoList extends LitElement {
     )
     if (!input) return
 
-    // eslint-disable-next-line no-console
-    console.log('[todo-list] toggle-all click', { checked: input.checked })
-
     this.dispatchEvent(new ToggleAllTodoEvent({ completed: input.checked }))
   }
 }

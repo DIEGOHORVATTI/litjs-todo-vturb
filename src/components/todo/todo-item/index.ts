@@ -72,23 +72,25 @@ export class TodoItem extends LitElement {
   }
 
   #onClick(e: Event) {
-    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const action = this.#getActionFromEvent(e)
+    if (!action) return
 
-    const deleteBtn = path.find(
-      (n): n is HTMLButtonElement => n instanceof HTMLButtonElement && n.dataset.action === 'delete'
-    )
-    if (deleteBtn) {
-      this.#deleteTodo()
-      return
+    switch (action) {
+      case 'delete':
+        this.#handleDeleteClick()
+        return
+      case 'toggle':
+        this.#handleToggleClick()
+        return
     }
+  }
 
-    const toggle = path.find(
-      (n): n is HTMLInputElement => n instanceof HTMLInputElement && n.dataset.action === 'toggle'
-    )
-    if (toggle) {
-      this.#toggleTodo()
-      return
-    }
+  #handleToggleClick() {
+    this.#toggleTodo()
+  }
+
+  #handleDeleteClick() {
+    this.#deleteTodo()
   }
 
   #onKeyup(e: KeyboardEvent) {
@@ -137,12 +139,22 @@ export class TodoItem extends LitElement {
   }
 
   #captureEscape(e: KeyboardEvent) {
-    if (e.key === 'escape') this.#abortEdit(e)
+    if (e.key === 'Escape') this.#abortEdit(e)
   }
 
   #abortEdit(e: Event) {
     const input = e.target as HTMLInputElement
     input.value = this.todo.title
     this.isEditing = false
+  }
+
+  #getActionFromEvent(e: Event): string | null {
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const actionable = path.find(
+      (n): n is HTMLElement => n instanceof HTMLElement && !!n.dataset.action
+    )
+    const action = actionable?.dataset.action ?? null
+    if (action === 'delete' || action === 'toggle') return action
+    return null
   }
 }

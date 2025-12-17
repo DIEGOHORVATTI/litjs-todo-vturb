@@ -43,7 +43,6 @@ export class TodoForm extends LitElement {
         })
       )
 
-      // Clear input
       const input = this.shadowRoot?.querySelector('ui-input') as any
       if (input) input.value = ''
     }
