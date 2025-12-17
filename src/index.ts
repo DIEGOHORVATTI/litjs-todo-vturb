@@ -21,6 +21,8 @@ import {
   ClearCompletedEvent,
 } from './events/todo-events.js'
 
+import { ThemeChangeEvent } from './events/theme-events.js'
+
 import { updateOnEvent } from './utils/update-on-event.js'
 
 @customElement('todo-app')
@@ -64,6 +66,9 @@ export class TodoApp extends LitElement {
   @state()
   readonly todoList = new Todos()
 
+  @state()
+  private theme: 'light' | 'dark' = 'light'
+
   constructor() {
     super()
 
@@ -73,11 +78,20 @@ export class TodoApp extends LitElement {
     this.addEventListener(UpdateTodoEvent.eventName, this.#onUpdateTodo)
     this.addEventListener(ToggleAllTodoEvent.eventName, this.#onToggleAll)
     this.addEventListener(ClearCompletedEvent.eventName, this.#onClearCompleted)
+
+    this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
   }
 
   override connectedCallback(): void {
     super.connectedCallback()
     this.todoList.connect()
+
+    // Theme bootstrap (temporary: localStorage; will move to infra repo later)
+    const stored = window.localStorage.getItem('theme')
+    if (stored === 'dark' || stored === 'light') {
+      this.theme = stored
+    }
+    this.dataset.theme = this.theme
   }
 
   override disconnectedCallback(): void {
@@ -91,6 +105,7 @@ export class TodoApp extends LitElement {
         <app-header>
           <todo-form></todo-form>
         </app-header>
+
         <main class="main">
           <todo-list
             class="show-priority"
@@ -98,6 +113,7 @@ export class TodoApp extends LitElement {
             .allCompleted=${this.todoList.allCompleted}
           ></todo-list>
         </main>
+
         <todo-footer
           class="${classMap({
             hidden: this.todoList.all.length === 0,
@@ -130,6 +146,12 @@ export class TodoApp extends LitElement {
   #onClearCompleted(e: ClearCompletedEvent) {
     if (e.defaultPrevented) return
     this.todoList.clearCompleted()
+  }
+
+  #onThemeChange(e: ThemeChangeEvent) {
+    this.theme = e.payload.theme
+    this.dataset.theme = this.theme
+    window.localStorage.setItem('theme', this.theme)
   }
 }
 
