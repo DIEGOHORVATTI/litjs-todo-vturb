@@ -32,10 +32,9 @@ export class TodoForm extends LitElement {
 
   #onUiSubmit(e: Event) {
     const evt = e as CustomEvent<string>
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target.tagName.toLowerCase() !== 'ui-input') return
-    if (target.dataset.action !== 'new-todo') return
+    const input = getUiInputFromEvent(e)
+    if (!input) return
+    if (input.dataset.action !== 'new-todo') return
     this.#onSubmit(evt)
   }
 
@@ -55,6 +54,16 @@ export class TodoForm extends LitElement {
       if (input) input.value = ''
     }
   }
+}
+
+function getUiInputFromEvent(e: Event): HTMLElement | null {
+  const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+  for (const node of path) {
+    if (node instanceof HTMLElement && node.tagName.toLowerCase() === 'ui-input') {
+      return node
+    }
+  }
+  return null
 }
 
 declare global {

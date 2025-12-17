@@ -83,7 +83,16 @@ export class TodoApp extends LitElement {
     this.addEventListener(ToggleAllTodoEvent.eventName, this.#onToggleAll)
     this.addEventListener(ClearCompletedEvent.eventName, this.#onClearCompleted)
 
+    this.addEventListener('todo-filter:selected', this.#onFilterSelected as EventListener)
+
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
+  }
+
+  #onFilterSelected(e: Event) {
+    const evt = e as CustomEvent<{ filter: FilterMode }>
+    const next = evt.detail?.filter ?? 'all'
+    this.filter = next
+    this.requestUpdate()
   }
 
   override connectedCallback(): void {
