@@ -22,7 +22,6 @@ export class TodoItem extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback()
 
-    this.addEventListener('change', this.#onChange)
     this.addEventListener('dblclick', this.#onDblClick)
     this.addEventListener('click', this.#onClick)
     this.addEventListener('keyup', this.#onKeyup)
@@ -30,7 +29,6 @@ export class TodoItem extends LitElement {
   }
 
   override disconnectedCallback(): void {
-    this.removeEventListener('change', this.#onChange)
     this.removeEventListener('dblclick', this.#onDblClick)
     this.removeEventListener('click', this.#onClick)
     this.removeEventListener('keyup', this.#onKeyup)
@@ -53,25 +51,16 @@ export class TodoItem extends LitElement {
             type="checkbox"
             .checked=${this.todo.completed}
             data-action="toggle" />
-          <label data-action="begin-edit"> ${this.todo.title} </label>
+
+          <label>
+            <span data-action="begin-edit"> ${this.todo.title} </span>
+          </label>
+
           <button data-action="delete" class="destroy"></button>
         </div>
         <input class="edit" type="text" data-action="edit" .value=${this.todo.title} />
       </li>
     `
-  }
-
-  #onChange(e: Event) {
-    const toggle = getInputFromEvent(e, 'toggle')
-    if (toggle) {
-      this.#toggleTodo()
-      return
-    }
-
-    const edit = getInputFromEvent(e, 'edit')
-    if (edit) {
-      this.#finishEditWithInput(edit)
-    }
   }
 
   #onDblClick(e: Event) {
@@ -83,10 +72,22 @@ export class TodoItem extends LitElement {
   }
 
   #onClick(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target.dataset.action === 'delete') {
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+
+    const deleteBtn = path.find(
+      (n): n is HTMLButtonElement => n instanceof HTMLButtonElement && n.dataset.action === 'delete'
+    )
+    if (deleteBtn) {
       this.#deleteTodo()
+      return
+    }
+
+    const toggle = path.find(
+      (n): n is HTMLInputElement => n instanceof HTMLInputElement && n.dataset.action === 'toggle'
+    )
+    if (toggle) {
+      this.#toggleTodo()
+      return
     }
   }
 
@@ -95,6 +96,10 @@ export class TodoItem extends LitElement {
     if (!target) return
     if (target.dataset.action === 'edit') {
       this.#captureEscape(e)
+
+      if (e.key === 'Enter') {
+        this.#finishEditWithInput(target as HTMLInputElement)
+      }
     }
   }
 
@@ -140,12 +145,4 @@ export class TodoItem extends LitElement {
     input.value = this.todo.title
     this.isEditing = false
   }
-}
-
-function getInputFromEvent(e: Event, action: string): HTMLInputElement | null {
-  const path = typeof e.composedPath === 'function' ? e.composedPath() : []
-  for (const node of path) {
-    if (node instanceof HTMLInputElement && node.dataset.action === action) return node
-  }
-  return null
 }

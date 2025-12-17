@@ -36,9 +36,10 @@ export class UiToggle extends LitElement {
   }
 
   #onClick(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    const btn = target.closest('button[data-action="toggle"]')
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const btn = path.find(
+      (n): n is HTMLButtonElement => n instanceof HTMLButtonElement && n.dataset.action === 'toggle'
+    )
     if (!btn) return
     this.#onToggle()
   }
