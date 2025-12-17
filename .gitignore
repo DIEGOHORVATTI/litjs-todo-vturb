@@ -2,7 +2,6 @@
 /.tsbuildinfo
 
 /lib
-.*lock
 /dist
 /index.js
 /index.js.map
