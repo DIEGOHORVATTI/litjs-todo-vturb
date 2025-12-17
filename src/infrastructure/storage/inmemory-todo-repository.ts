@@ -17,7 +17,7 @@ export class InMemoryTodoRepository implements TodoRepository {
   }
 
   async update(edit: TodoEdit): Promise<void> {
-    this.#todos = this.#todos.map((t) => (t.id === edit.id ? ({ ...t, ...edit } as Todo) : t))
+    this.#todos = this.#todos.map((t) => (t.id === edit.id ? { ...t, ...edit } : t))
   }
 
   async remove(id: string): Promise<void> {

@@ -11,7 +11,7 @@ import type { FilterMode, Todo } from './types/index.js'
 
 import './components/layout/app-header/index.js'
 import './components/todo/todo-list/index.js'
-import './components/todo/todo-form.js'
+import './components/todo/todo-form/index.js'
 import './components/todo/todo-footer/index.js'
 
 import { ThemeChangeEvent } from './events/theme-events.js'
