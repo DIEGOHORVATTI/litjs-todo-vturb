@@ -6,7 +6,8 @@ import { state } from 'lit/decorators/state.js'
 import { todoStyles } from './components/todo/todo.css.js'
 import { tokens } from './styles/tokens.css.js'
 import { baseStyles } from './styles/base.css.js'
-import { Todos } from './todos.js'
+import type { Todo, FilterMode } from './types/index.js'
+import { createContainer } from './di/container.js'
 
 import './components/layout/app-header.js'
 import './components/todo/todo-list.js'
@@ -64,10 +65,15 @@ export class TodoApp extends LitElement {
 
   @updateOnEvent('change')
   @state()
-  readonly todoList = new Todos()
+  private todos: Todo[] = []
+
+  @state()
+  private filter: FilterMode = 'all'
 
   @state()
   private theme: 'light' | 'dark' = 'light'
+
+  #container = createContainer()
 
   constructor() {
     super()
@@ -84,7 +90,8 @@ export class TodoApp extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback()
-    this.todoList.connect()
+
+    this.#hydrateTodos()
 
     // Theme bootstrap (temporary: localStorage; will move to infra repo later)
     const stored = window.localStorage.getItem('theme')
@@ -96,10 +103,14 @@ export class TodoApp extends LitElement {
 
   override disconnectedCallback(): void {
     super.disconnectedCallback()
-    this.todoList.disconnect()
   }
 
   override render() {
+    const filteredTodos = this.#filteredTodos()
+    const activeCount = this.todos.filter((t) => !t.completed).length
+    const completedCount = this.todos.length - activeCount
+    const allCompleted = this.todos.length > 0 && completedCount === this.todos.length
+
     return html`
       <section>
         <app-header>
@@ -109,49 +120,84 @@ export class TodoApp extends LitElement {
         <main class="main">
           <todo-list
             class="show-priority"
-            .todos=${this.todoList.filtered()}
-            .allCompleted=${this.todoList.allCompleted}
+            .todos=${filteredTodos}
+            .allCompleted=${allCompleted}
           ></todo-list>
         </main>
 
         <todo-footer
           class="${classMap({
-            hidden: this.todoList.all.length === 0,
+            hidden: this.todos.length === 0,
           })}"
-          .activeCount=${this.todoList.active.length}
-          .completedCount=${this.todoList.completed.length}
-          .filter=${this.todoList.filter ?? 'all'}
+          .activeCount=${activeCount}
+          .completedCount=${completedCount}
+          .filter=${this.filter}
         ></todo-footer>
       </section>
     `
   }
 
   #onAddTodo(e: AddTodoEvent) {
-    this.todoList.add(e.payload)
+    void this.#container.todos.addTodo(e.payload).then((todo) => {
+      this.todos = [...this.todos, todo]
+      this.requestUpdate()
+    })
   }
 
   #onRemoveTodo(e: RemoveTodoEvent) {
     if (e.defaultPrevented) return
-    this.todoList.remove(e.payload.id)
+    void this.#container.todos.removeTodo(e.payload.id).then(() => {
+      this.todos = this.todos.filter((t) => t.id !== e.payload.id)
+      this.requestUpdate()
+    })
   }
 
   #onUpdateTodo(e: UpdateTodoEvent) {
-    this.todoList.update({ id: e.payload.id, ...e.payload.changes })
+    void this.#container.todos.updateTodo(e.payload).then(() => {
+      this.todos = this.todos.map((t) =>
+        t.id === e.payload.id ? ({ ...t, ...e.payload.changes } as Todo) : t
+      )
+      this.requestUpdate()
+    })
   }
 
   #onToggleAll(e: ToggleAllTodoEvent) {
-    this.todoList.toggleAll(e.payload.completed)
+    const input = e.payload.completed === undefined ? {} : { completed: e.payload.completed }
+    void this.#container.todos.toggleAll(input).then((updated) => {
+      this.todos = updated
+      this.requestUpdate()
+    })
   }
 
   #onClearCompleted(e: ClearCompletedEvent) {
     if (e.defaultPrevented) return
-    this.todoList.clearCompleted()
+    void this.#container.todos.clearCompleted().then((updated) => {
+      this.todos = updated
+      this.requestUpdate()
+    })
   }
 
   #onThemeChange(e: ThemeChangeEvent) {
     this.theme = e.payload.theme
     this.dataset.theme = this.theme
     window.localStorage.setItem('theme', this.theme)
+  }
+
+  async #hydrateTodos() {
+    const todos = await this.#container.todos.loadTodos()
+    this.todos = todos
+    this.requestUpdate()
+  }
+
+  #filteredTodos(): Todo[] {
+    switch (this.filter) {
+      case 'active':
+        return this.todos.filter((t) => !t.completed)
+      case 'completed':
+        return this.todos.filter((t) => t.completed)
+      default:
+        return this.todos
+    }
   }
 }
 
