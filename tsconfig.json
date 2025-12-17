@@ -28,11 +28,7 @@
 
     // alias
     "paths": {
-      "@domain/*": ["domain/*"],
-      "@infrastructure/*": ["infrastructure/*"],
-      "@components/*": ["components/*"],
-      "@events/*": ["events/*"],
-      "@types/*": ["types/*"]
+      "@/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts"],

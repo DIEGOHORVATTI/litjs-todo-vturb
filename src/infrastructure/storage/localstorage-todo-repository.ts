@@ -1,5 +1,7 @@
 import type { TodoRepository } from '../../domain/todos/todo-repository.js'
-import type { StorageData, Todo, TodoEdit } from '../../types/index.js'
+import type { Todo, TodoEdit } from '../../types/index.js'
+import read from './shared/read.js'
+import write from './shared/write.js'
 
 export class LocalStorageTodoRepository implements TodoRepository {
   async list(): Promise<Todo[]> {
@@ -26,42 +28,4 @@ export class LocalStorageTodoRepository implements TodoRepository {
     const data = read()
     write({ ...data, todos })
   }
-}
-
-const STORAGE_KEY = 'todomvc-plus'
-
-function read(): StorageData {
-  const raw = window.localStorage.getItem(STORAGE_KEY)
-  if (!raw) {
-    return {
-      version: '1',
-      todos: [],
-      projects: [],
-      theme: 'auto',
-      selectedProjectId: 'inbox',
-    }
-  }
-  try {
-    const parsed = JSON.parse(raw) as Partial<StorageData>
-    return {
-      version: parsed.version ?? '1',
-      todos: parsed.todos ?? [],
-      projects: parsed.projects ?? [],
-      theme: parsed.theme ?? 'auto',
-      selectedProjectId: parsed.selectedProjectId ?? 'inbox',
-      ...(parsed.exportedAt ? { exportedAt: parsed.exportedAt } : {}),
-    }
-  } catch {
-    return {
-      version: '1',
-      todos: [],
-      projects: [],
-      theme: 'auto',
-      selectedProjectId: 'inbox',
-    }
-  }
-}
-
-function write(data: StorageData) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
 }

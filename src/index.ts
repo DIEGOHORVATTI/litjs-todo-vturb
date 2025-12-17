@@ -5,6 +5,7 @@ import { classMap } from 'lit/directives/class-map.js'
 
 import { todoStyles } from './components/todo/todo.css.js'
 import { createContainer } from './di/container.js'
+import { CONSTANTS } from './shared/constants/config.js'
 import { baseStyles } from './styles/base.css.js'
 import { tokens } from './styles/tokens.css.js'
 import type { FilterMode, Todo } from './types/index.js'
@@ -101,7 +102,7 @@ export class TodoApp extends LitElement {
     this.#hydrateTodos()
 
     // Theme bootstrap (temporary: localStorage; will move to infra repo later)
-    const stored = window.localStorage.getItem('theme')
+    const stored = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY)
     if (stored === 'dark' || stored === 'light') {
       this.theme = stored
     }
@@ -185,7 +186,7 @@ export class TodoApp extends LitElement {
   #onThemeChange(e: ThemeChangeEvent) {
     this.theme = e.payload.theme
     this.dataset.theme = this.theme
-    window.localStorage.setItem('theme', this.theme)
+    window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY, this.theme)
   }
 
   async #hydrateTodos() {
