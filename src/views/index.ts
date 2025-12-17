@@ -42,6 +42,7 @@ export class TodoApp extends LitElement {
       :host {
         display: block;
         margin: 96px auto var(--space-6) auto;
+        border-radius: var(--radius-lg);
         background: var(--color-bg);
       }
 
