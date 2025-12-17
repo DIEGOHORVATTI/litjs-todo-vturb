@@ -23,7 +23,7 @@
   },
   "scripts": {
     "dev": "wds",
-    "build": "esbuild ./src/views/index.ts --bundle --minify --tree-shaking=true --outdir=dist && cp index.html dist/index.html && sed -i '' 's|\"\\./src/views/index\\.ts\"|\"\\./index\\.js\"|g' dist/index.html",
+    "build": "esbuild ./src/views/index.ts --bundle --minify --tree-shaking --target=es2020 --format=esm --outfile=dist/index.js --drop:console --drop:debugger && cp index.html dist/index.html && sed -i '' 's|\"\\./src/views/index\\.ts\"|\"\\./index\\.js\"|g' dist/index.html",
     "start": "npx serve dist",
     "format": "prettier --write .",
     "test": "jest",
