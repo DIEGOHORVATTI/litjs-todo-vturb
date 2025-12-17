@@ -81,12 +81,12 @@ export class TodoItem extends LitElement {
         display: block;
         line-height: 1.2;
         transition: color 0.4s;
-        font-weight: 400;
-        color: #484848;
+        font-weight: 500;
+        color: var(--color-text);
       }
 
       .completed label {
-        color: #949494;
+        color: var(--color-muted);
         text-decoration: line-through;
       }
 
@@ -100,12 +100,12 @@ export class TodoItem extends LitElement {
         height: 40px;
         margin: auto 0;
         font-size: 30px;
-        color: #949494;
+        color: var(--color-muted);
         transition: color 0.2s ease-out;
       }
       .destroy:hover,
       .destroy:focus {
-        color: #c18585;
+        color: var(--color-accent-strong);
       }
 
       .destroy:after {

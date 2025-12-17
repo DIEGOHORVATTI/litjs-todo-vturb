@@ -14,11 +14,13 @@ export class TodoFooter extends LitElement {
     css`
       :host {
         display: block;
-        padding: 10px 15px;
-        height: 20px;
+        padding: var(--space-3) var(--space-4);
+        min-height: 44px;
         text-align: center;
-        font-size: 15px;
-        border-top: 1px solid #e6e6e6;
+        font-size: var(--text-sm);
+        border-top: 1px solid var(--color-border);
+        background: var(--color-surface);
+        color: var(--color-muted);
       }
       :host:before {
         content: '';
@@ -28,9 +30,8 @@ export class TodoFooter extends LitElement {
         left: 0;
         height: 50px;
         overflow: hidden;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
-          0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6,
-          0 17px 2px -6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+        opacity: 0.25;
       }
 
       .todo-count {
@@ -38,7 +39,8 @@ export class TodoFooter extends LitElement {
         text-align: left;
       }
       .todo-count strong {
-        font-weight: 300;
+        font-weight: 600;
+        color: var(--color-text);
       }
 
       .filters {
@@ -56,18 +58,20 @@ export class TodoFooter extends LitElement {
       li a {
         color: inherit;
         margin: 3px;
-        padding: 3px 7px;
+        padding: 6px 10px;
         text-decoration: none;
         border: 1px solid transparent;
-        border-radius: 3px;
+        border-radius: var(--radius-sm);
       }
 
       a:hover {
-        border-color: #db7676;
+        border-color: color-mix(in oklab, var(--color-accent), transparent 65%);
       }
 
       a.selected {
-        border-color: #ce4646;
+        color: var(--color-text);
+        background: color-mix(in oklab, var(--color-accent), transparent 88%);
+        border-color: color-mix(in oklab, var(--color-accent), transparent 45%);
       }
       .clear-completed,
       :host .clear-completed:active {
@@ -76,10 +80,15 @@ export class TodoFooter extends LitElement {
         line-height: 19px;
         text-decoration: none;
         cursor: pointer;
+        padding: 6px 10px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--color-border);
+        background: var(--color-surface-2);
+        color: var(--color-text);
       }
 
       .clear-completed:hover {
-        text-decoration: underline;
+        filter: brightness(0.98);
       }
     `,
   ]
