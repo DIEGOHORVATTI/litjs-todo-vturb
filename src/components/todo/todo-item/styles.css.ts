@@ -59,6 +59,10 @@ export const todoItemStyles = css`
     text-decoration: line-through;
   }
 
+  .completed {
+    opacity: 0.72;
+  }
+
   .destroy {
     display: none;
     position: absolute;

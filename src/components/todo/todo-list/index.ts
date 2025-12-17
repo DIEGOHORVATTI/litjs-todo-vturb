@@ -23,11 +23,11 @@ export class TodoList extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback()
-    this.addEventListener('change', this.#onChange)
+    this.addEventListener('click', this.#onClick)
   }
 
   override disconnectedCallback(): void {
-    this.removeEventListener('change', this.#onChange)
+    this.removeEventListener('click', this.#onClick)
     super.disconnectedCallback()
   }
 
@@ -55,11 +55,17 @@ export class TodoList extends LitElement {
     `
   }
 
-  #onChange(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target instanceof HTMLInputElement && target.dataset.action === 'toggle-all') {
-      this.dispatchEvent(new ToggleAllTodoEvent({ completed: target.checked }))
-    }
+  #onClick(e: Event) {
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const input = path.find(
+      (n): n is HTMLInputElement =>
+        n instanceof HTMLInputElement && n.dataset.action === 'toggle-all'
+    )
+    if (!input) return
+
+    // eslint-disable-next-line no-console
+    console.log('[todo-list] toggle-all click', { checked: input.checked })
+
+    this.dispatchEvent(new ToggleAllTodoEvent({ completed: input.checked }))
   }
 }

@@ -55,6 +55,7 @@ export class TodoFooter extends LitElement {
         <strong>${this.activeCount}</strong>
         items left
       </span>
+
       <ul class="filters">
         <li>${allFilter}</li>
         <li>${activeFilter}</li>
@@ -77,6 +78,7 @@ export class TodoFooter extends LitElement {
     if (link) {
       e.preventDefault()
       const filter = (link.dataset.filter ?? 'all') as TodoFilter
+
       this.dispatchEvent(
         new CustomEvent<TodoFilterSelectedDetail>('todo-filter:selected', {
           detail: { filter },

@@ -34,7 +34,10 @@ export class TodoController {
 
   async updateTodo(payload: UpdateTodoPayload): Promise<ReadonlyArray<Todo>> {
     await this.services.todos.updateTodo(payload)
-    this.model.updateTodo(payload.id, payload.changes as Partial<Todo>)
+
+    const todos = await this.services.todos.loadTodos()
+    this.model.replaceAll(todos)
+
     return this.model.todos
   }
 

@@ -108,6 +108,7 @@ export class TodoApp extends LitElement {
 
     if (opts.updateHash) {
       const desired = `#${next}`
+
       if (window.location.hash !== desired) {
         window.location.hash = desired
       }
@@ -145,7 +146,7 @@ export class TodoApp extends LitElement {
 
     return html`
       <section style="width: 500px;">
-        <app-header></app-header>
+        <app-header class="hidden"></app-header>
 
         <main class="main">
           <todo-list class="show-priority" .todos=${filteredTodos} .allCompleted=${allCompleted}>
