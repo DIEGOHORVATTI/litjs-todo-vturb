@@ -9,10 +9,10 @@ import { baseStyles } from './styles/base.css.js'
 import type { Todo, FilterMode } from './types/index.js'
 import { createContainer } from './di/container.js'
 
-import './components/layout/app-header.js'
-import './components/todo/todo-list.js'
+import './components/layout/app-header/index.js'
+import './components/todo/todo-list/index.js'
 import './components/todo/todo-form.js'
-import './components/todo/todo-footer.js'
+import './components/todo/todo-footer/index.js'
 
 import {
   AddTodoEvent,
