@@ -1,7 +1,7 @@
-import { createTodoUseCases } from '../application/todos/todo-usecases.js'
+import { createTodoUseCases, type TodoUseCases } from '../application/todos/todo-usecases.js'
 import { LocalStorageTodoRepository } from '../infrastructure/storage/localstorage-todo-repository.js'
 
-export function createContainer() {
+export function createContainer(): TodoUseCases {
   const repo = new LocalStorageTodoRepository()
 
   const ids = {
@@ -14,5 +14,5 @@ export function createContainer() {
 
   const todos = createTodoUseCases({ repo, ids, clock })
 
-  return { repo, todos }
+  return todos
 }

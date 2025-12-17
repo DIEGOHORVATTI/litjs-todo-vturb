@@ -1,5 +1,4 @@
 import { createTodoUseCases } from '../application/todos/todo-usecases.js'
-import { InMemoryTodoRepository } from '../infrastructure/storage/inmemory-todo-repository.js'
 import {
   fixedClock,
   fixedIds,
@@ -13,6 +12,7 @@ import {
   todoBUpdatedAt20200102,
   todoBuyMilk,
 } from './mocks/index.js'
+import { InMemoryTodoRepository } from './mocks/inmemory-todo-repository.js'
 
 describe('todo use cases', () => {
   test('addTodo persists and returns the new todo', async () => {

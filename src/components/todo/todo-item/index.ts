@@ -62,15 +62,15 @@ export class TodoItem extends LitElement {
   }
 
   #onChange(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target instanceof HTMLInputElement && target.dataset.action === 'toggle') {
+    const toggle = getInputFromEvent(e, 'toggle')
+    if (toggle) {
       this.#toggleTodo()
       return
     }
 
-    if (target instanceof HTMLInputElement && target.dataset.action === 'edit') {
-      this.#finishEdit(e)
+    const edit = getInputFromEvent(e, 'edit')
+    if (edit) {
+      this.#finishEditWithInput(edit)
     }
   }
 
@@ -125,8 +125,7 @@ export class TodoItem extends LitElement {
     setTimeout(() => input.focus(), 0)
   }
 
-  #finishEdit(e: Event) {
-    const el = e.target as HTMLInputElement
+  #finishEditWithInput(el: HTMLInputElement) {
     const title = el.value
     this.dispatchEvent(new UpdateTodoEvent({ id: this.todo.id, changes: { title } }))
     this.isEditing = false
@@ -141,4 +140,12 @@ export class TodoItem extends LitElement {
     input.value = this.todo.title
     this.isEditing = false
   }
+}
+
+function getInputFromEvent(e: Event, action: string): HTMLInputElement | null {
+  const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+  for (const node of path) {
+    if (node instanceof HTMLInputElement && node.dataset.action === action) return node
+  }
+  return null
 }

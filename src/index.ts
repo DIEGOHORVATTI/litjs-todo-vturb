@@ -143,7 +143,7 @@ export class TodoApp extends LitElement {
   }
 
   #onAddTodo(e: AddTodoEvent) {
-    void this.#container.todos.addTodo(e.payload).then((todo) => {
+    void this.#container.addTodo(e.payload).then((todo) => {
       this.todos = [...this.todos, todo]
       this.requestUpdate()
     })
@@ -151,14 +151,14 @@ export class TodoApp extends LitElement {
 
   #onRemoveTodo(e: RemoveTodoEvent) {
     if (e.defaultPrevented) return
-    void this.#container.todos.removeTodo(e.payload.id).then(() => {
+    void this.#container.removeTodo(e.payload.id).then(() => {
       this.todos = this.todos.filter((t) => t.id !== e.payload.id)
       this.requestUpdate()
     })
   }
 
   #onUpdateTodo(e: UpdateTodoEvent) {
-    void this.#container.todos.updateTodo(e.payload).then(() => {
+    void this.#container.updateTodo(e.payload).then(() => {
       this.todos = this.todos.map((t) =>
         t.id === e.payload.id ? ({ ...t, ...e.payload.changes } as Todo) : t
       )
@@ -168,7 +168,7 @@ export class TodoApp extends LitElement {
 
   #onToggleAll(e: ToggleAllTodoEvent) {
     const input = e.payload.completed === undefined ? {} : { completed: e.payload.completed }
-    void this.#container.todos.toggleAll(input).then((updated) => {
+    void this.#container.toggleAll(input).then((updated) => {
       this.todos = updated
       this.requestUpdate()
     })
@@ -176,7 +176,7 @@ export class TodoApp extends LitElement {
 
   #onClearCompleted(e: ClearCompletedEvent) {
     if (e.defaultPrevented) return
-    void this.#container.todos.clearCompleted().then((updated) => {
+    void this.#container.clearCompleted().then((updated) => {
       this.todos = updated
       this.requestUpdate()
     })
@@ -189,7 +189,7 @@ export class TodoApp extends LitElement {
   }
 
   async #hydrateTodos() {
-    const todos = await this.#container.todos.loadTodos()
+    const todos = await this.#container.loadTodos()
     this.todos = todos
     this.requestUpdate()
   }

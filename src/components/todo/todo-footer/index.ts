@@ -8,6 +8,10 @@ import type { FilterMode as TodoFilter } from '../../../types/index.js'
 import { todoStyles } from '../todo.css.js'
 import { todoFooterStyles } from './styles.css.js'
 
+export type TodoFilterSelectedDetail = {
+  filter: TodoFilter
+}
+
 @customElement('todo-footer')
 export class TodoFooter extends LitElement {
   static override styles = [todoStyles, todoFooterStyles]
@@ -67,22 +71,59 @@ export class TodoFooter extends LitElement {
   #onClick(e: Event) {
     const target = e.target as HTMLElement | null
     if (!target) return
+
+    const link = getAnchorFromEvent(e)
+
+    if (link) {
+      e.preventDefault()
+      const filter = (link.dataset.filter ?? 'all') as TodoFilter
+      this.dispatchEvent(
+        new CustomEvent<TodoFilterSelectedDetail>('todo-filter:selected', {
+          detail: { filter },
+          bubbles: true,
+          composed: true,
+        })
+      )
+      return
+    }
+
     const btn = target.closest('button[data-action="clear-completed"]')
     if (!btn) return
     this.dispatchEvent(new ClearCompletedEvent())
   }
 }
 
-function filterLink({
-  text,
-  filter,
-  selectedFilter,
-}: {
+function getAnchorFromEvent(e: Event): HTMLAnchorElement | null {
+  const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+
+  for (const node of path) {
+    if (!(node instanceof HTMLElement)) continue
+
+    // Direct click on the <a>
+    if (node instanceof HTMLAnchorElement && node.dataset.action === 'set-filter') {
+      return node
+    }
+
+    // Click on descendants inside the <a>
+    const a = node.closest?.('a[data-action="set-filter"]')
+    if (a instanceof HTMLAnchorElement) return a
+  }
+
+  return null
+}
+
+type TodoFooterProps = {
   text: string
-  filter: string
-  selectedFilter: string | undefined
-}) {
-  return html`<a class="${classMap({ selected: filter === selectedFilter })}" href="#/${filter}"
+  filter: TodoFilter
+  selectedFilter: TodoFilter | undefined
+}
+
+function filterLink({ text, filter, selectedFilter }: TodoFooterProps) {
+  return html`<a
+    class="${classMap({ selected: filter === selectedFilter })}"
+    href="#/${filter}"
+    data-action="set-filter"
+    data-filter="${filter}"
     >${text}</a
   >`
 }

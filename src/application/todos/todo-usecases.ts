@@ -25,7 +25,7 @@ type ToggleAllInput = {
   completed?: boolean
 }
 
-type TodoUseCases = {
+export type TodoUseCases = {
   loadTodos(): Promise<Todo[]>
   addTodo(input: AddTodoInput): Promise<Todo>
   updateTodo(input: UpdateTodoInput): Promise<void>
