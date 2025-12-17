@@ -145,7 +145,7 @@ export class TodoApp extends LitElement {
     const allCompleted = this.todos.length > 0 && completedCount === this.todos.length
 
     return html`
-      <section style="width: 500px;">
+      <section style="width: 600px;">
         <app-header class="hidden"></app-header>
 
         <main class="main">
