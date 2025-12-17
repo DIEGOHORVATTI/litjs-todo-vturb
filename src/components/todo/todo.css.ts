@@ -22,7 +22,7 @@ export const todoStyles = css`
   :focus,
   .toggle:focus + label,
   .toggle-all:focus + label {
-    box-shadow: 0 0 2px 2px #cf7d7d;
+    box-shadow: var(--focus-ring);
     outline: 0;
   }
 
@@ -38,8 +38,9 @@ export const todoStyles = css`
     border: 0;
     color: inherit;
     padding: 6px;
-    border: 1px solid #999;
-    box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: inset 0 -1px 4px rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -48,8 +49,8 @@ export const todoStyles = css`
   .new-todo {
     padding: 16px 16px 16px 60px;
     border: none;
-    background: rgba(0, 0, 0, 0.003);
-    box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
+    background: transparent;
+    box-shadow: none;
   }
 
   /*

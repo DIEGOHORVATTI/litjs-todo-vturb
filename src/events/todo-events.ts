@@ -1,4 +1,5 @@
 import type { TodoEdit, Priority } from '../types/index.js'
+import { AppEvent } from './base.js'
 
 export interface AddTodoPayload {
   title: string
@@ -7,60 +8,64 @@ export interface AddTodoPayload {
   dueDate?: string
 }
 
-export class AddTodoEvent extends Event {
-  static readonly eventName = 'todo-add' as const
-
-  readonly payload: AddTodoPayload
+export class AddTodoEvent extends AppEvent<AddTodoPayload> {
+  static readonly eventName = 'todo:add' as const
 
   constructor(payload: AddTodoPayload) {
-    super(AddTodoEvent.eventName, { bubbles: true, composed: true })
-    this.payload = payload
+    super(AddTodoEvent.eventName, payload)
   }
 }
 
-export class DeleteTodoEvent extends Event {
-  static readonly eventName = 'todo-delete' as const
+export interface RemoveTodoPayload {
+  id: string
+}
 
-  readonly id: string
+export class RemoveTodoEvent extends AppEvent<RemoveTodoPayload> {
+  static readonly eventName = 'todo:remove' as const
 
-  constructor(id: string) {
-    super(DeleteTodoEvent.eventName, { bubbles: true, composed: true })
-    this.id = id
+  constructor(payload: RemoveTodoPayload) {
+    super(RemoveTodoEvent.eventName, payload, { cancelable: true })
   }
 }
 
-export class EditTodoEvent extends Event {
-  static readonly eventName = 'todo-edit' as const
+export interface UpdateTodoPayload {
+  id: string
+  changes: Omit<TodoEdit, 'id'>
+}
 
-  readonly edit: TodoEdit
+export class UpdateTodoEvent extends AppEvent<UpdateTodoPayload> {
+  static readonly eventName = 'todo:update' as const
 
-  constructor(edit: TodoEdit) {
-    super(EditTodoEvent.eventName, { bubbles: true, composed: true })
-    this.edit = edit
+  constructor(payload: UpdateTodoPayload) {
+    super(UpdateTodoEvent.eventName, payload)
   }
 }
 
-export class ToggleAllTodoEvent extends Event {
-  static readonly eventName = 'todo-toggle-all' as const
+export interface ToggleAllTodoPayload {
+  completed?: boolean
+}
+
+export class ToggleAllTodoEvent extends AppEvent<ToggleAllTodoPayload> {
+  static readonly eventName = 'todo:toggle-all' as const
+
+  constructor(payload: ToggleAllTodoPayload = {}) {
+    super(ToggleAllTodoEvent.eventName, payload)
+  }
+}
+
+export class ClearCompletedEvent extends AppEvent<void> {
+  static readonly eventName = 'todo:clear-completed' as const
 
   constructor() {
-    super(ToggleAllTodoEvent.eventName, { bubbles: true, composed: true })
-  }
-}
-
-export class ClearCompletedEvent extends Event {
-  static readonly eventName = 'clear-completed' as const
-
-  constructor() {
-    super(ClearCompletedEvent.eventName, { bubbles: true, composed: true })
+    super(ClearCompletedEvent.eventName, undefined, { cancelable: true })
   }
 }
 
 declare global {
   interface HTMLElementEventMap {
     [AddTodoEvent.eventName]: AddTodoEvent
-    [DeleteTodoEvent.eventName]: DeleteTodoEvent
-    [EditTodoEvent.eventName]: EditTodoEvent
+    [RemoveTodoEvent.eventName]: RemoveTodoEvent
+    [UpdateTodoEvent.eventName]: UpdateTodoEvent
     [ToggleAllTodoEvent.eventName]: ToggleAllTodoEvent
     [ClearCompletedEvent.eventName]: ClearCompletedEvent
   }

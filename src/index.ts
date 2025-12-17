@@ -4,6 +4,8 @@ import { customElement } from 'lit/decorators/custom-element.js'
 import { state } from 'lit/decorators/state.js'
 
 import { todoStyles } from './components/todo/todo.css.js'
+import { tokens } from './styles/tokens.css.js'
+import { baseStyles } from './styles/base.css.js'
 import { Todos } from './todos.js'
 
 import './components/layout/app-header.js'
@@ -13,9 +15,9 @@ import './components/todo/todo-footer.js'
 
 import {
   AddTodoEvent,
-  DeleteTodoEvent,
+  RemoveTodoEvent,
   ToggleAllTodoEvent,
-  EditTodoEvent,
+  UpdateTodoEvent,
   ClearCompletedEvent,
 } from './events/todo-events.js'
 
@@ -24,25 +26,36 @@ import { updateOnEvent } from './utils/update-on-event.js'
 @customElement('todo-app')
 export class TodoApp extends LitElement {
   static override styles = [
+    tokens,
+    baseStyles,
     todoStyles,
     css`
       :host {
         display: block;
-        background: #fff;
-        margin: 130px 0 40px 0;
-        position: relative;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+        max-width: var(--todo-max-width);
+        margin: 96px auto var(--space-6) auto;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-2);
+        overflow: hidden;
       }
       main {
         position: relative;
         z-index: 2;
-        border-top: 1px solid #e6e6e6;
+        border-top: 1px solid var(--color-border);
+        background: var(--color-surface);
       }
       .hidden {
         display: none;
       }
       :focus {
         box-shadow: none !important;
+      }
+
+      /* Provide a nice page background even when the body is outside our shadow DOM */
+      :host {
+        background-color: var(--color-surface);
       }
     `,
   ]
@@ -56,8 +69,8 @@ export class TodoApp extends LitElement {
 
     // event handlers for the app
     this.addEventListener(AddTodoEvent.eventName, this.#onAddTodo)
-    this.addEventListener(DeleteTodoEvent.eventName, this.#onDeleteTodo)
-    this.addEventListener(EditTodoEvent.eventName, this.#onEditTodo)
+    this.addEventListener(RemoveTodoEvent.eventName, this.#onRemoveTodo)
+    this.addEventListener(UpdateTodoEvent.eventName, this.#onUpdateTodo)
     this.addEventListener(ToggleAllTodoEvent.eventName, this.#onToggleAll)
     this.addEventListener(ClearCompletedEvent.eventName, this.#onClearCompleted)
   }
@@ -91,7 +104,7 @@ export class TodoApp extends LitElement {
           })}"
           .activeCount=${this.todoList.active.length}
           .completedCount=${this.todoList.completed.length}
-          .filter=${this.todoList.filter}
+          .filter=${this.todoList.filter ?? 'all'}
         ></todo-footer>
       </section>
     `
@@ -101,19 +114,21 @@ export class TodoApp extends LitElement {
     this.todoList.add(e.payload)
   }
 
-  #onDeleteTodo(e: DeleteTodoEvent) {
-    this.todoList.remove(e.id)
+  #onRemoveTodo(e: RemoveTodoEvent) {
+    if (e.defaultPrevented) return
+    this.todoList.remove(e.payload.id)
   }
 
-  #onEditTodo(e: EditTodoEvent) {
-    this.todoList.update(e.edit)
+  #onUpdateTodo(e: UpdateTodoEvent) {
+    this.todoList.update({ id: e.payload.id, ...e.payload.changes })
   }
 
-  #onToggleAll() {
-    this.todoList.toggleAll()
+  #onToggleAll(e: ToggleAllTodoEvent) {
+    this.todoList.toggleAll(e.payload.completed)
   }
 
-  #onClearCompleted() {
+  #onClearCompleted(e: ClearCompletedEvent) {
+    if (e.defaultPrevented) return
     this.todoList.clearCompleted()
   }
 }

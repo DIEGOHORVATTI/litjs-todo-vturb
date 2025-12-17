@@ -5,7 +5,7 @@ import { state } from 'lit/decorators/state.js'
 import { classMap } from 'lit/directives/class-map.js'
 
 import { todoStyles } from './todo.css.js'
-import { DeleteTodoEvent, EditTodoEvent } from '../../events/todo-events.js'
+import { RemoveTodoEvent, UpdateTodoEvent } from '../../events/todo-events.js'
 import type { Todo } from '../../types/index.js'
 
 declare global {
@@ -167,11 +167,16 @@ export class TodoItem extends LitElement {
   }
 
   #toggleTodo() {
-    this.dispatchEvent(new EditTodoEvent({ id: this.todo.id, completed: !this.todo.completed }))
+    this.dispatchEvent(
+      new UpdateTodoEvent({
+        id: this.todo.id,
+        changes: { completed: !this.todo.completed },
+      })
+    )
   }
 
   #deleteTodo() {
-    this.dispatchEvent(new DeleteTodoEvent(this.todo.id))
+    this.dispatchEvent(new RemoveTodoEvent({ id: this.todo.id }))
   }
 
   #beginEdit() {
@@ -183,7 +188,7 @@ export class TodoItem extends LitElement {
   #finishEdit(e: Event) {
     const el = e.target as HTMLInputElement
     const title = el.value
-    this.dispatchEvent(new EditTodoEvent({ id: this.todo.id, title }))
+    this.dispatchEvent(new UpdateTodoEvent({ id: this.todo.id, changes: { title } }))
     this.isEditing = false
   }
 
