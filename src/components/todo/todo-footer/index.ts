@@ -53,20 +53,15 @@ export class TodoFooter extends LitElement {
     return html`
       <span class="todo-count">
         <strong>${this.activeCount}</strong>
-        items left
+        pendente
       </span>
 
-      <ul class="filters">
-        <li>${allFilter}</li>
-        <li>${activeFilter}</li>
-        <li>${completedFilter}</li>
-      </ul>
-
-      ${this.completedCount > 0
-        ? html`<button data-action="clear-completed" class="clear-completed">
-            Limpar concluídas
-          </button>`
-        : nothing}
+      <div class="filters">
+        ${this.completedCount
+          ? html`<a data-action="clear-completed" class="clear-completed">Limpar concluídas</a>`
+          : nothing}
+        ${allFilter} ${activeFilter} ${completedFilter}
+      </div>
     `
   }
 
@@ -90,10 +85,27 @@ export class TodoFooter extends LitElement {
       return
     }
 
-    const btn = target.closest('button[data-action="clear-completed"]')
-    if (!btn) return
+    const clear = getClearCompletedFromEvent(e)
+    if (!clear) return
     this.dispatchEvent(new ClearCompletedEvent())
   }
+}
+
+function getClearCompletedFromEvent(e: Event): HTMLAnchorElement | null {
+  const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+
+  for (const node of path) {
+    if (!(node instanceof HTMLElement)) continue
+
+    if (node instanceof HTMLAnchorElement && node.dataset.action === 'clear-completed') {
+      return node
+    }
+
+    const a = node.closest?.('a[data-action="clear-completed"]')
+    if (a instanceof HTMLAnchorElement) return a
+  }
+
+  return null
 }
 
 function getAnchorFromEvent(e: Event): HTMLAnchorElement | null {
