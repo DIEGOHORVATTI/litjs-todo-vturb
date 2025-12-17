@@ -121,7 +121,7 @@ type TodoFooterProps = {
 function filterLink({ text, filter, selectedFilter }: TodoFooterProps) {
   return html`<a
     class="${classMap({ selected: filter === selectedFilter })}"
-    href="#/${filter}"
+    href="#${filter}"
     data-action="set-filter"
     data-filter="${filter}"
     >${text}</a

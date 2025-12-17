@@ -80,7 +80,6 @@ export class TodoApp extends LitElement {
   constructor() {
     super()
 
-    // event handlers for the app
     this.addEventListener(AddTodoEvent.eventName, this.#onAddTodo)
     this.addEventListener(RemoveTodoEvent.eventName, this.#onRemoveTodo)
     this.addEventListener(UpdateTodoEvent.eventName, this.#onUpdateTodo)
@@ -92,11 +91,28 @@ export class TodoApp extends LitElement {
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
   }
 
+  #onHashChange = () => {
+    const next = parseFilterFromHash(window.location.hash)
+    this.#setFilter(next, { updateHash: false })
+  }
+
   #onFilterSelected(e: Event) {
     const evt = e as CustomEvent<{ filter: FilterMode }>
     const next = evt.detail?.filter ?? 'all'
+    this.#setFilter(next, { updateHash: true })
+  }
+
+  #setFilter(next: FilterMode, opts: { updateHash: boolean }) {
     this.filter = next
     this.#todoModel.setFilter(next)
+
+    if (opts.updateHash) {
+      const desired = `#${next}`
+      if (window.location.hash !== desired) {
+        window.location.hash = desired
+      }
+    }
+
     this.requestUpdate()
   }
 
@@ -105,7 +121,9 @@ export class TodoApp extends LitElement {
 
     this.#hydrateTodos()
 
-    // Theme bootstrap (temporary: localStorage; will move to infra repo later)
+    window.addEventListener('hashchange', this.#onHashChange)
+    this.#onHashChange()
+
     const stored = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.THEME_KEY)
     if (stored === 'dark' || stored === 'light') {
       this.theme = stored
@@ -115,6 +133,7 @@ export class TodoApp extends LitElement {
   }
 
   override disconnectedCallback(): void {
+    window.removeEventListener('hashchange', this.#onHashChange)
     super.disconnectedCallback()
   }
 
@@ -199,6 +218,12 @@ export class TodoApp extends LitElement {
     this.#todoModel.setFilter(this.filter)
     return this.#todoModel.getFilteredTodos()
   }
+}
+
+function parseFilterFromHash(hash: string): FilterMode {
+  const raw = (hash ?? '').replace(/^#\/?/, '').trim().toLowerCase()
+  if (raw === 'active' || raw === 'completed' || raw === 'all') return raw
+  return 'all'
 }
 
 declare global {
