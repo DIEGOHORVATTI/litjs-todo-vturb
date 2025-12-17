@@ -18,6 +18,7 @@ import '../components/layout/app-header/index.js'
 import '../components/todo/todo-list/index.js'
 import '../components/todo/todo-form/index.js'
 import '../components/todo/todo-footer/index.js'
+import '../components/ui/ui-toggle/index.js'
 
 import { ThemeChangeEvent } from '../events/theme-events.js'
 import {
@@ -89,6 +90,30 @@ export class TodoApp extends LitElement {
     this.addEventListener('todo-filter:selected', this.#onFilterSelected as EventListener)
 
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
+
+    this.addEventListener('ui-toggle', this.#onUiThemeToggle as EventListener)
+  }
+
+  #onUiThemeToggle(e: Event) {
+    const evt = e as CustomEvent<{ checked: boolean; source?: HTMLElement }>
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const toggle = path.find(
+      (n): n is HTMLElement => n instanceof HTMLElement && n.tagName.toLowerCase() === 'ui-toggle'
+    )
+
+    const source = (toggle ?? evt.detail?.source) as HTMLElement | null
+
+    if (!source) {
+      return
+    }
+
+    if (source.dataset.action !== 'theme') {
+      return
+    }
+
+    const checked = evt.detail?.checked
+    if (typeof checked !== 'boolean') return
+    this.dispatchEvent(new ThemeChangeEvent({ theme: checked ? 'dark' : 'light' }))
   }
 
   #onHashChange = () => {
@@ -161,6 +186,14 @@ export class TodoApp extends LitElement {
           .activeCount=${activeCount}
           .completedCount=${completedCount}
           .filter=${this.filter}></todo-footer>
+
+        <div
+          class="${classMap({
+            hidden: this.todos.length === 0,
+          })}"
+          style="display:flex; justify-content:flex-end; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--color-border); background: var(--color-surface);">
+          <ui-toggle label="Dark" .checked=${this.theme === 'dark'} data-action="theme"></ui-toggle>
+        </div>
       </section>
     `
   }

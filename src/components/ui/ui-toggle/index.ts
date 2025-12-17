@@ -47,8 +47,8 @@ export class UiToggle extends LitElement {
   #onToggle() {
     this.checked = !this.checked
     this.dispatchEvent(
-      new CustomEvent<boolean>('ui-toggle', {
-        detail: this.checked,
+      new CustomEvent<{ checked: boolean; source: UiToggle }>('ui-toggle', {
+        detail: { checked: this.checked, source: this },
         bubbles: true,
         composed: true,
       })
