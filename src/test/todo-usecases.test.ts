@@ -1,3 +1,4 @@
+import { StorageTodoRepository } from '../services/storage-todo-repository.js'
 import { createTodoUseCases } from '../services/todo-usecases.js'
 import {
   fixedClock,
@@ -12,11 +13,11 @@ import {
   todoBUpdatedAt20200102,
   todoBuyMilk,
 } from './mocks/index.js'
-import { InMemoryTodoRepository } from './mocks/inmemory-todo-repository.js'
+import { InMemoryTodoStorage } from './mocks/inmemory-todo-storage.js'
 
-describe('todo use cases', () => {
-  test('addTodo persists and returns the new todo', async () => {
-    const repo = new InMemoryTodoRepository()
+describe('casos de uso de todo', () => {
+  test('addTodo persiste e retorna o novo todo', async () => {
+    const repo = new StorageTodoRepository(new InMemoryTodoStorage())
     const todos = createTodoUseCases({
       repo,
       clock: fixedClock(ISO_2020_01_01),
@@ -29,8 +30,8 @@ describe('todo use cases', () => {
     await expect(todos.loadTodos()).resolves.toEqual([created])
   })
 
-  test('updateTodo updates fields in repository', async () => {
-    const repo = new InMemoryTodoRepository([todoA])
+  test('updateTodo atualiza os campos no repositório', async () => {
+    const repo = new StorageTodoRepository(new InMemoryTodoStorage({ todos: [todoA] }))
     const todos = createTodoUseCases({
       repo,
       clock: fixedClock(ISO_2020_01_02),
@@ -42,8 +43,8 @@ describe('todo use cases', () => {
     await expect(todos.loadTodos()).resolves.toEqual([todoBUpdatedAt20200102])
   })
 
-  test('removeTodo removes from repository', async () => {
-    const repo = new InMemoryTodoRepository([todoA, todoB])
+  test('removeTodo remove o todo do repositório', async () => {
+    const repo = new StorageTodoRepository(new InMemoryTodoStorage({ todos: [todoA, todoB] }))
     const todos = createTodoUseCases({ repo, clock: fixedClock('x'), ids: fixedIds() })
 
     await todos.removeTodo('t1')
@@ -51,8 +52,10 @@ describe('todo use cases', () => {
     await expect(todos.loadTodos()).resolves.toEqual([todoB])
   })
 
-  test('toggleAll without input flips based on current state', async () => {
-    const repo = new InMemoryTodoRepository([todoA, todoBCompleted])
+  test('toggleAll sem entrada alterna com base no estado atual', async () => {
+    const repo = new StorageTodoRepository(
+      new InMemoryTodoStorage({ todos: [todoA, todoBCompleted] })
+    )
     const todos = createTodoUseCases({
       repo,
       clock: fixedClock(ISO_2020_01_03),
@@ -65,8 +68,10 @@ describe('todo use cases', () => {
     expect(updated.every((t) => t.updatedAt === ISO_2020_01_03)).toBe(true)
   })
 
-  test('clearCompleted removes completed todos and returns remaining', async () => {
-    const repo = new InMemoryTodoRepository([todoACompleted, todoB])
+  test('clearCompleted remove os todos concluídos e retorna os restantes', async () => {
+    const repo = new StorageTodoRepository(
+      new InMemoryTodoStorage({ todos: [todoACompleted, todoB] })
+    )
     const todos = createTodoUseCases({ repo, clock: fixedClock('x'), ids: fixedIds() })
 
     const remaining = await todos.clearCompleted()
