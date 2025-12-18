@@ -10,6 +10,7 @@ import { TodoController } from '../controllers/todo-controller.js'
 import { ThemeModel } from '../models/theme-model.js'
 import { TodoModel } from '../models/todo-model.js'
 import { createServices } from '../services/create-services.js'
+import { safeParseStorageData } from '../services/data-io.js'
 import { CONSTANTS } from '../shared/constants/config.js'
 import { baseStyles } from '../styles/base.css.js'
 import { tokens } from '../styles/tokens.css.js'
@@ -70,12 +71,19 @@ export class TodoApp extends LitElement {
 
       .theme-row {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-4);
         padding: var(--space-3) var(--space-4);
         border-top: 1px solid var(--color-border);
         background: var(--color-surface);
         border-bottom-left-radius: var(--radius-lg);
         border-bottom-right-radius: var(--radius-lg);
+      }
+
+      .data-left {
+        flex: 1;
+        min-width: 320px;
       }
 
       .hidden {
@@ -196,18 +204,13 @@ export class TodoApp extends LitElement {
     window.addEventListener('hashchange', this.#onHashChange)
     this.#onHashChange()
 
-    // Theme is persisted inside the main app state (STATE_KEY).
     const raw = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY)
     if (raw) {
-      try {
-        const parsed = JSON.parse(raw) as { theme?: unknown }
-        const stored = parsed.theme
-        if (stored === 'dark' || stored === 'light') {
-          this.theme = stored
-          this.#themeModel.setTheme(stored)
-        }
-      } catch {
-        // ignore
+      const parsed = JSON.parse(raw) as { theme?: unknown }
+      const stored = parsed.theme
+      if (stored === 'dark' || stored === 'light') {
+        this.theme = stored
+        this.#themeModel.setTheme(stored)
       }
     }
     this.dataset.theme = this.theme
@@ -265,6 +268,9 @@ export class TodoApp extends LitElement {
             hidden: this.todos.length === 0,
             'theme-row': true,
           })}">
+          <div class="data-left">
+            <data-panel></data-panel>
+          </div>
           <ui-toggle
             label="Modo escuro"
             .checked=${this.theme === 'dark'}
@@ -278,7 +284,6 @@ export class TodoApp extends LitElement {
     const data = this.#snapshotState({ includeExportedAt: true })
     const json = JSON.stringify(data, null, 2)
 
-    // Put JSON into panel textarea if open.
     const panel = this.shadowRoot?.querySelector('data-panel') as any
     const textarea = panel?.shadowRoot?.querySelector('textarea[data-action="json"]') as
       | HTMLTextAreaElement
@@ -286,11 +291,9 @@ export class TodoApp extends LitElement {
 
     if (textarea) {
       textarea.value = json
-      // Keep internal state in sync.
       panel.value = json
     }
 
-    // Trigger a download.
     const blob = new Blob([json], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -341,7 +344,6 @@ export class TodoApp extends LitElement {
       ...(opts.includeExportedAt ? { exportedAt: new Date().toISOString() } : {}),
     }
 
-    // Persist snapshot, keeping app state consistent.
     window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY, JSON.stringify(snapshot))
     return snapshot
   }
@@ -387,7 +389,6 @@ export class TodoApp extends LitElement {
     this.theme = this.#themeController.setTheme(e.payload.theme)
     this.dataset.theme = this.theme
 
-    // Persist theme inside the main app state object.
     const raw = window.localStorage.getItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY)
     if (!raw) {
       window.localStorage.setItem(
@@ -410,7 +411,6 @@ export class TodoApp extends LitElement {
         JSON.stringify({ ...parsed, theme: this.theme })
       )
     } catch {
-      // If state is corrupted, rewrite a minimal valid state.
       window.localStorage.setItem(
         CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY,
         JSON.stringify({
@@ -460,56 +460,6 @@ export class TodoApp extends LitElement {
     })
   }
 }
-
-function safeParseStorageData(json: string): {
-  version: string
-  todos: any[]
-  projects: any[]
-  theme: any
-  selectedProjectId: string
-  exportedAt?: string
-} | null {
-  try {
-    const data = JSON.parse(json) as any
-    if (!data || typeof data !== 'object') return null
-    if (!Array.isArray(data.todos) || !Array.isArray(data.projects)) return null
-    if (typeof data.selectedProjectId !== 'string') return null
-    if (typeof data.version !== 'string') return null
-
-    // Minimal todo shape validation
-    for (const t of data.todos) {
-      if (!t || typeof t !== 'object') return null
-      if (typeof t.id !== 'string') return null
-      if (typeof t.title !== 'string') return null
-      if (typeof t.completed !== 'boolean') return null
-      if (typeof t.projectId !== 'string') return null
-      if (t.priority !== 'low' && t.priority !== 'medium' && t.priority !== 'high') return null
-      if (t.dueDate !== undefined && typeof t.dueDate !== 'string') return null
-      if (typeof t.createdAt !== 'string' || typeof t.updatedAt !== 'string') return null
-    }
-
-    for (const p of data.projects) {
-      if (!p || typeof p !== 'object') return null
-      if (typeof p.id !== 'string' || typeof p.name !== 'string') return null
-    }
-
-    // Theme
-    const theme = data.theme
-    if (theme !== 'light' && theme !== 'dark' && theme !== 'auto') return null
-
-    return {
-      version: data.version,
-      todos: data.todos,
-      projects: data.projects,
-      theme: data.theme,
-      selectedProjectId: data.selectedProjectId,
-      ...(typeof data.exportedAt === 'string' ? { exportedAt: data.exportedAt } : {}),
-    }
-  } catch {
-    return null
-  }
-}
-
 function parseFilterFromHash(hash: string): FilterMode {
   const raw = (hash ?? '').replace(/^#\/?/, '').trim().toLowerCase()
   if (raw === 'active' || raw === 'completed' || raw === 'all' || raw === 'overdue') return raw
