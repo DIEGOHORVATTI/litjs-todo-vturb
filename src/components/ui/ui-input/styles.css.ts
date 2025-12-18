@@ -5,8 +5,8 @@ export const uiInputStyles = css`
   select {
     border: 1px solid var(--color-border);
     width: 100%;
-    padding: 8px 12px;
-    font-size: var(--text-xl);
+    padding: 8px 9px;
+    font-size: var(--text-md);
     color: var(--color-text);
     background: var(--color-surface-2);
     font-family: inherit;

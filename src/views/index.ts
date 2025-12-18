@@ -85,25 +85,11 @@ export class TodoApp extends LitElement {
       .projects-row {
         padding: var(--space-3) var(--space-4);
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 2fr;
         gap: var(--space-4);
         align-items: end;
         border-bottom: 1px solid var(--color-border);
         background: var(--color-surface);
-      }
-
-      @media (max-width: 860px) {
-        :host {
-          padding: 48px 0 var(--space-6) 0;
-        }
-
-        section {
-          width: calc(100% - 24px);
-        }
-
-        .projects-row {
-          grid-template-columns: 1fr;
-        }
       }
     `,
   ]
@@ -246,6 +232,7 @@ export class TodoApp extends LitElement {
           <project-picker
             .projects=${this.projects}
             .selectedProjectId=${this.selectedProjectId}></project-picker>
+
           <project-form></project-form>
         </div>
 

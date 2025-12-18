@@ -61,7 +61,7 @@ export class TodoItem extends LitElement {
             <span data-action="begin-edit"> ${this.todo.title} </span>
             <span class="meta" aria-hidden="true">
               <span class="badge" data-priority=${this.todo.priority}> ${this.todo.priority} </span>
-              ${dueValid
+              ${due
                 ? html`<span class="badge" data-due=${isOverdue ? 'overdue' : 'ok'}>
                     ${formatDueDate(due as Date)}
                   </span>`

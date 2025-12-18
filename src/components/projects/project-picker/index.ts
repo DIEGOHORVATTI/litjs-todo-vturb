@@ -27,7 +27,7 @@ export class ProjectPicker extends LitElement {
   override render() {
     return html`
       <label>
-        <span>Projeto</span>
+        <span>Selecione seu Projeto</span>
 
         <select data-action="select-project" .value=${this.selectedProjectId}>
           <option value="all">Todos</option>
