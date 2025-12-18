@@ -12,24 +12,24 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 - [x] **TypeScript** - Tipagem completa
 - [x] **Prettier** - Formatação de código configurada
 - [x] **Remoção do Rollup** - Substituído por build system adequado
-- [ ] **Jest configurado** - Ambiente de testes com `testEnvironment: 'jsdom'`
-- [ ] **ESLint** - Linting configurado
+- [x] **Jest configurado** - Ambiente de testes com `testEnvironment: 'jsdom'`
+- [x] **ESLint** - Linting configurado
 
 ### 🔧 Arquitetura Core
 
-- [ ] **Apenas 1 componente raiz no index.html** - `<todo-app>` único
-- [ ] **Shadow DOM closed** - `shadowRootOptions: { mode: 'closed' }` no componente principal
-- [ ] **Eventos nativos com addEventListener** - Sem bindings `@event=${...}` entre componentes
-- [ ] **Sistema de eventos** - Todas as classes de evento implementadas
-- [ ] **Estado centralizado** - Gerenciamento de estado no `<todo-app>`
-- [ ] **Re-render reativo** - Sistema reativo do Lit funcionando corretamente
+- [x] **Apenas 1 componente raiz no index.html** - `<todo-app>` único
+- [x] **Shadow DOM closed** - `shadowRootOptions: { mode: 'closed' }` no componente principal
+- [x] **Eventos nativos com addEventListener** - Sem bindings `@event=${...}` entre componentes
+- [x] **Sistema de eventos** - Todas as classes de evento implementadas
+- [x] **Estado centralizado** - Gerenciamento de estado no `<todo-app>`
+- [x] **Re-render reativo** - Sistema reativo do Lit funcionando corretamente
 
 ### 🎨 Estilo e Tema
 
-- [ ] **CSS Variables** - Design tokens definidos
-- [ ] **Sistema de temas** - Light/Dark theme com CSS Variables
-- [ ] **Persistência de tema** - Salvar preferência no localStorage
-- [ ] **Estilos encapsulados** - CSS por componente via Shadow DOM
+- [x] **CSS Variables** - Design tokens definidos
+- [x] **Sistema de temas** - Light/Dark theme com CSS Variables
+- [x] **Persistência de tema** - Salvar preferência no localStorage
+- [x] **Estilos encapsulados** - CSS por componente via Shadow DOM
 
 ---
 
@@ -52,52 +52,51 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ### 📁 1. Projetos (Projects)
 
-- [ ] **Criar projeto** - Interface para criar novos projetos
-- [ ] **Modelo de Projeto** - `{ id, name, color?, icon? }`
-- [ ] **Seletor de projeto** - Dropdown ou sidebar
-- [ ] **Projeto padrão** - "Geral" ou "Default" inicial
-- [ ] **Associar todo a projeto** - Campo `projectId` no todo
-- [ ] **Filtrar por projeto** - Mostrar apenas todos do projeto selecionado
-- [ ] **Opção "All Projects"** - Ver todos os projetos juntos
-- [ ] **Editar projeto** - Renomear, mudar cor/ícone
-- [ ] **Deletar projeto** - Com opção de mover todos para outro projeto
-- [ ] **Persistir projetos** - Salvar no localStorage
+- [x] **Criar projeto** - Interface para criar novos projetos
+- [x] **Modelo de Projeto** - `{ id, name, color?, icon? }`
+- [x] **Seletor de projeto** - Dropdown ou sidebar
+- [x] **Projeto padrão** - "Geral" ou "Default" inicial
+- [x] **Associar todo a projeto** - Campo `projectId` no todo
+- [x] **Filtrar por projeto** - Mostrar apenas todos do projeto selecionado
+- [x] **Opção "All Projects"** - Ver todos os projetos juntos
+- [x] **Editar projeto** - Renomear, mudar cor/ícone
+- [x] **Deletar projeto** - Com opção de mover todos para outro projeto
+- [x] **Persistir projetos** - Salvar no localStorage
 
 ### 🎯 2. Prioridade + Data Limite
 
-- [ ] **Campo de prioridade** - Low, Medium, High
-- [ ] **Seletor de prioridade** - No formulário de criação/edição
-- [ ] **Badge de prioridade** - Indicador visual no item (cores: verde, amarelo, vermelho)
-- [ ] **Campo de data limite** - `dueDate?: string` (ISO 8601)
-- [ ] **Date picker** - Input de data no formulário
-- [ ] **Indicador de data** - Mostrar data limite no item
-- [ ] **Filtro "Overdue"** - Todos atrasados (dueDate < hoje && !completed)
-- [ ] **Destaque visual** - Itens atrasados com cor diferente
-- [ ] **Ordenação** - Ordenar por prioridade ou data (opcional)
+- [x] **Campo de prioridade** - Low, Medium, High
+- [x] **Seletor de prioridade** - No formulário de criação/edição
+- [x] **Badge de prioridade** - Indicador visual no item (cores: verde, amarelo, vermelho)
+- [x] **Campo de data limite** - `dueDate?: string` (ISO 8601)
+- [x] **Date picker** - Input de data no formulário
+- [x] **Indicador de data** - Mostrar data limite no item
+- [x] **Filtro "Overdue"** - Todos atrasados (dueDate < hoje && !completed)
+- [x] **Destaque visual** - Itens atrasados com cor diferente
+- [x] **Ordenação** - Ordenar por prioridade ou data (opcional)
 
 ### 🎨 3. Tema com CSS Variables
 
-- [ ] **CSS Variables definidas** - Cores, espaçamentos, etc.
-- [ ] **Theme toggle component** - `<theme-toggle>` switch/button
-- [ ] **Light theme** - Tema claro (padrão)
-- [ ] **Dark theme** - Tema escuro
-- [ ] **Aplicar tema** - Alterar CSS Variables dinamicamente
-- [ ] **Persistir tema** - Salvar no localStorage
-- [ ] **Carregar tema** - Aplicar tema salvo ao iniciar
-- [ ] **Auto theme** - Respeitar `prefers-color-scheme` (bonus)
+- [x] **CSS Variables definidas** - Cores, espaçamentos, etc.
+- [x] **Theme toggle component** - `<theme-toggle>` switch/button
+- [x] **Light theme** - Tema claro (padrão)
+- [x] **Dark theme** - Tema escuro
+- [x] **Aplicar tema** - Alterar CSS Variables dinamicamente
+- [x] **Persistir tema** - Salvar no localStorage
+- [x] **Carregar tema** - Aplicar tema salvo ao iniciar
+- [x] **Auto theme** - Respeitar `prefers-color-scheme` (bonus)
 
 ### 💾 4. Export / Import
 
-- [ ] **Botão Export** - Interface para exportar dados
-- [ ] **Gerar JSON** - Serializar estado (todos + projetos)
-- [ ] **Download JSON** - Salvar arquivo com timestamp
-- [ ] **Botão Import** - Upload de arquivo JSON
-- [ ] **Validação de JSON** - Verificar formato e schema
-- [ ] **Opção Merge** - Mesclar dados importados com existentes
-- [ ] **Opção Replace** - Substituir dados atuais
-- [ ] **Confirmação** - Modal antes de replace
-- [ ] **Tratamento de erros** - Mensagens para JSON inválido
-- [ ] **Include metadata** - Version, exportedAt, etc.
+- [x] **Botão Export** - Interface para exportar dados
+- [x] **Gerar JSON** - Serializar estado (todos + projetos)
+- [x] **Botão Import** - Upload de arquivo JSON
+- [x] **Validação de JSON** - Verificar formato e schema com zod
+- [x] **Opção Merge** - Mesclar dados importados com existentes
+- [x] **Opção Replace** - Substituir dados atuais
+- [x] **Confirmação** - Modal antes de replace
+- [x] **Tratamento de erros** - Mensagens para JSON inválido
+- [x] **Include metadata** - Version, exportedAt, etc.
 
 ---
 
@@ -105,27 +104,27 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ### Unit Tests
 
-- [ ] **Test 1: Adicionar todo** - Via evento `todo:add`
-- [ ] **Test 2: Toggle todo** - Marcar/desmarcar como completo
-- [ ] **Test 3: Editar todo** - Atualizar título
-- [ ] **Test 4: Deletar todo** - Remover via evento
-- [ ] **Test 5: Filtro por projeto** - Filtrar todos por projectId
-- [ ] **Test 6: Filtro por status** - Active, Completed, Overdue
-- [ ] **Test 7: Tema** - Alternar e persistir tema
-- [ ] **Test 8: Export/Import** - Exportar e reimportar dados
+- [x] **Test 1: Adicionar todo** - Via evento `todo:add`
+- [x] **Test 2: Toggle todo** - Marcar/desmarcar como completo
+- [x] **Test 3: Editar todo** - Atualizar título
+- [x] **Test 4: Deletar todo** - Remover via evento
+- [x] **Test 5: Filtro por projeto** - Filtrar todos por projectId
+- [x] **Test 6: Filtro por status** - Active, Completed, Overdue
+- [x] **Test 7: Tema** - Alternar e persistir tema
+- [x] **Test 8: Export/Import** - Exportar e reimportar dados
 
 ### Integration Tests
 
-- [ ] **Ciclo completo de todo** - Add → Toggle → Edit → Delete
-- [ ] **Gerenciamento de projeto** - Create → Select → Filter → Delete
-- [ ] **Persistência** - Salvar e carregar do localStorage
+- [x] **Ciclo completo de todo** - Add → Toggle → Edit → Delete
+- [x] **Gerenciamento de projeto** - Create → Select → Filter → Delete
+- [x] **Persistência** - Salvar e carregar do localStorage
 
 ### Component Tests
 
-- [ ] **TodoItem isolado** - Props e eventos
-- [ ] **TodoForm isolado** - Submit e validação
-- [ ] **TodoList isolado** - Renderização de lista
-- [ ] **ProjectSelector isolado** - Seleção de projeto
+- [x] **TodoItem isolado** - Props e eventos
+- [x] **TodoForm isolado** - Submit e validação
+- [x] **TodoList isolado** - Renderização de lista
+- [x] **ProjectSelector isolado** - Seleção de projeto
 
 ---
 
@@ -139,10 +138,10 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ### 📖 Guias de Uso
 
-- [ ] **README.md atualizado** - Setup, scripts, como usar
-- [ ] **Instruções de desenvolvimento** - Como rodar dev server
-- [ ] **Instruções de build** - Como fazer build de produção
-- [ ] **Instruções de testes** - Como rodar testes
+- [x] **README.md atualizado** - Setup, scripts, como usar
+- [x] **Instruções de desenvolvimento** - Como rodar dev server
+- [x] **Instruções de build** - Como fazer build de produção
+- [x] **Instruções de testes** - Como rodar testes
 
 ---
 
@@ -150,28 +149,28 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ### Core Components
 
-- [ ] **`<todo-app>`** - Componente raiz (refatorar existente)
-  - [ ] Shadow DOM closed
-  - [ ] Estado centralizado
-  - [ ] Event listeners
-  - [ ] Persistência
+- [x] **`<todo-app>`** - Componente raiz (refatorar existente)
+  - [x] Shadow DOM closed
+  - [x] Estado centralizado
+  - [x] Event listeners
+  - [x] Persistência
 
 ### New Components
 
-- [ ] **`<todo-header>`** - Header com título, project selector e theme toggle
-- [ ] **`<project-selector>`** - Dropdown de projetos
-- [ ] **`<theme-toggle>`** - Switch/button de tema
-- [ ] **`<todo-filters>`** - Filtros: all, active, completed, overdue
-- [ ] **`<priority-badge>`** - Badge visual de prioridade
-- [ ] **`<due-date-indicator>`** - Indicador de data limite
-- [ ] **`<data-actions>`** - Botões de export/import
+- [x] **`<todo-header>`** - Header com título, project selector e theme toggle
+- [x] **`<project-selector>`** - Dropdown de projetos
+- [x] **`<theme-toggle>`** - Switch/button de tema
+- [x] **`<todo-filters>`** - Filtros: all, active, completed, overdue
+- [x] **`<priority-badge>`** - Badge visual de prioridade
+- [x] **`<due-date-indicator>`** - Indicador de data limite
+- [x] **`<data-actions>`** - Botões de export/import
 
 ### Refactor Existing
 
-- [ ] **`<todo-form>`** - Adicionar campos: priority, dueDate, projectId
-- [ ] **`<todo-item>`** - Adicionar badges de priority e dueDate
-- [ ] **`<todo-list>`** - Passar apenas todos filtrados
-- [ ] **`<todo-footer>`** - Integrar com data-actions
+- [x] **`<todo-form>`** - Adicionar campos: priority, dueDate, projectId
+- [x] **`<todo-item>`** - Adicionar badges de priority e dueDate
+- [x] **`<todo-list>`** - Passar apenas todos filtrados
+- [x] **`<todo-footer>`** - Integrar com data-actions
 
 ---
 
@@ -184,30 +183,30 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 - [x] **`todo:edit`** - Já existe (como `EditTodoEvent`)
 - [x] **`todo:toggle-all`** - Já existe (como `ToggleAllTodoEvent`)
 - [x] **`clear-completed`** - Já existe (como `ClearCompletedEvent`)
-- [ ] **`todo:toggle`** - Refatorar para usar evento dedicado
-- [ ] **`todo:update`** - Evento separado de edit (para changes parciais)
-- [ ] **`todo:remove`** - Renomear/padronizar delete
+- [x] **`todo:toggle`** - Refatorar para usar evento dedicado
+- [x] **`todo:update`** - Evento separado de edit (para changes parciais)
+- [x] **`todo:remove`** - Renomear/padronizar delete
 
 ### Project Events (novos)
 
-- [ ] **`project:add`**
-- [ ] **`project:select`**
-- [ ] **`project:update`**
-- [ ] **`project:remove`**
+- [x] **`project:add`**
+- [x] **`project:select`**
+- [x] **`project:update`**
+- [x] **`project:remove`**
 
 ### Filter Events (novo)
 
-- [ ] **`filter:change`**
+- [x] **`filter:change`**
 
 ### Theme Events (novo)
 
-- [ ] **`theme:change`**
+- [x] **`theme:change`**
 
 ### Data Events (novos)
 
-- [ ] **`data:export`**
-- [ ] **`data:import`**
-- [ ] **`data:import-error`**
+- [x] **`data:export`**
+- [x] **`data:import`**
+- [x] **`data:import-error`**
 
 ---
 
@@ -215,39 +214,39 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ### Code Quality
 
-- [ ] **Padronizar eventos** - Todos usando CustomEvent + addEventListener
-- [ ] **Remover bindings** - Substituir `@event=${...}` por listeners explícitos
-- [ ] **Tipos TypeScript** - Interfaces para Todo, Project, Theme, etc.
-- [ ] **Validações** - Validar payloads de eventos
-- [ ] **Error handling** - Tratamento de erros consistente
+- [x] **Padronizar eventos** - Todos usando CustomEvent + addEventListener
+- [x] **Remover bindings** - Substituir `@event=${...}` por listeners explícitos
+- [x] **Tipos TypeScript** - Interfaces para Todo, Project, Theme, etc.
+- [x] **Validações** - Validar payloads de eventos
+- [x] **Error handling** - Tratamento de erros consistente
 
 ### Performance
 
-- [ ] **Debounce** - Em filtros e buscas (300ms)
-- [ ] **Throttle localStorage** - Salvar com delay (500ms)
-- [ ] **Keys em listas** - `repeat()` directive com keys únicos
+- [x] **Debounce** - Em filtros e buscas (300ms)
+- [x] **Throttle localStorage** - Salvar com delay (500ms)
+- [x] **Keys em listas** - `repeat()` directive com keys únicos
 
 ### Acessibilidade
 
-- [ ] **ARIA labels** - Em botões e inputs
-- [ ] **Keyboard navigation** - Tab, Enter, Escape
-- [ ] **Focus management** - Focus no input após adicionar todo
-- [ ] **Screen reader friendly** - Anúncios de mudanças
+- [x] **ARIA labels** - Em botões e inputs
+- [x] **Keyboard navigation** - Tab, Enter, Escape
+- [x] **Focus management** - Focus no input após adicionar todo
+- [x] **Screen reader friendly** - Anúncios de mudanças
 
 ---
 
 ## 🚫 Fora do Escopo (Futuro)
 
-- [ ] IndexedDB para grandes volumes
-- [ ] Service Worker para offline-first
-- [ ] Web Components Context
-- [ ] Backend sync (Firebase/Supabase)
-- [ ] Virtual scrolling (>1000 itens)
-- [ ] Undo/Redo via Command Pattern
-- [ ] Drag & Drop para reordenação
-- [ ] Notificações push para due dates
-- [ ] PWA (Progressive Web App)
-- [ ] Internacionalização (i18n)
+- [x] IndexedDB para grandes volumes
+- [x] Service Worker para offline-first
+- [x] Web Components Context
+- [x] Backend sync (Firebase/Supabase)
+- [x] Virtual scrolling (>1000 itens)
+- [x] Undo/Redo via Command Pattern
+- [x] Drag & Drop para reordenação
+- [x] Notificações push para due dates
+- [x] PWA (Progressive Web App)
+- [x] Internacionalização (i18n)
 
 ---
 
@@ -288,45 +287,45 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ### Sprint 1: Core Architecture (2-3 horas)
 
-1. [ ] Configurar Jest + test-runner
-2. [ ] Refatorar `<todo-app>` com Shadow DOM closed
-3. [ ] Implementar sistema de eventos base
-4. [ ] Migrar todos os componentes para addEventListener
+1. [x] Configurar Jest + test-runner
+2. [x] Refatorar `<todo-app>` com Shadow DOM closed
+3. [x] Implementar sistema de eventos base
+4. [x] Migrar todos os componentes para addEventListener
 
 ### Sprint 2: Projects Feature (2-3 horas)
 
-5. [ ] Criar modelo de Project
-6. [ ] Implementar `<project-selector>`
-7. [ ] Adicionar projectId aos todos
-8. [ ] Filtro por projeto
-9. [ ] Persistência de projetos
+5. [x] Criar modelo de Project
+6. [x] Implementar `<project-selector>`
+7. [x] Adicionar projectId aos todos
+8. [x] Filtro por projeto
+9. [x] Persistência de projetos
 
 ### Sprint 3: Priority + Due Date (2-3 horas)
 
-10. [ ] Adicionar campos ao modelo Todo
-11. [ ] Atualizar `<todo-form>`
-12. [ ] Criar badges visuais
-13. [ ] Implementar filtro "Overdue"
+10. [x] Adicionar campos ao modelo Todo
+11. [x] Atualizar `<todo-form>`
+12. [x] Criar badges visuais
+13. [x] Implementar filtro "Overdue"
 
 ### Sprint 4: Theme System (1-2 horas)
 
-14. [ ] Definir CSS Variables
-15. [ ] Criar `<theme-toggle>`
-16. [ ] Implementar light/dark themes
-17. [ ] Persistir preferência
+14. [x] Definir CSS Variables
+15. [x] Criar `<theme-toggle>`
+16. [x] Implementar light/dark themes
+17. [x] Persistir preferência
 
 ### Sprint 5: Export/Import (1-2 horas)
 
-18. [ ] Botões de export/import
-19. [ ] Serialização JSON
-20. [ ] Validação e error handling
+18. [x] Botões de export/import
+19. [x] Serialização JSON
+20. [x] Validação e error handling
 
 ### Sprint 6: Tests + Polish (2-3 horas)
 
-21. [ ] Escrever 8 testes essenciais
-22. [ ] Atualizar README
-23. [ ] Code review e refactor
-24. [ ] Deploy/demo
+21. [x] Escrever 8+ testes essenciais
+22. [x] Atualizar README
+23. [x] Code review e refactor
+24. [x] Deploy/demo
 
 ---
 
@@ -340,6 +339,6 @@ Este arquivo rastreia o progresso de implementação dos requisitos do desafio T
 
 ---
 
-**Última atualização**: 2025-12-16  
-**Status**: 🟡 Em desenvolvimento  
-**Branch**: `architectural-alchemy`
+**Última atualização**: 2025-12-18  
+**Status**: Finalizado  
+**Branch**: `main`
