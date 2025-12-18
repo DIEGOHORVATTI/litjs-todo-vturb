@@ -1,8 +1,6 @@
 import { css, html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 
-import { DataExportEvent } from '../../../events/data-events.js'
-
 import '../../ui/ui-button/index.js'
 
 @customElement('data-panel-actions')
@@ -51,12 +49,14 @@ export class DataPanelActions extends LitElement {
 
     const action = source.dataset.action
     if (action === 'export') {
-      this.dispatchEvent(new DataExportEvent())
+      this.dispatchEvent(
+        new CustomEvent('data-panel:toggle-export', { bubbles: true, composed: true })
+      )
     }
 
     if (action === 'import') {
       this.dispatchEvent(
-        new CustomEvent('data-panel:open-import', { bubbles: true, composed: true })
+        new CustomEvent('data-panel:toggle-import', { bubbles: true, composed: true })
       )
     }
   }

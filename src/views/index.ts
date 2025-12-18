@@ -143,20 +143,42 @@ export class TodoApp extends LitElement {
     this.addEventListener(DataExportEvent.eventName, this.#onDataExport)
     this.addEventListener(DataImportEvent.eventName, this.#onDataImport)
 
-    this.addEventListener('data-panel:open-import', this.#onOpenImportPanel as EventListener)
+    this.addEventListener('data-panel:toggle-import', this.#onToggleImportPanel as EventListener)
+    this.addEventListener('data-panel:toggle-export', this.#onToggleExportPanel as EventListener)
 
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
 
     this.addEventListener('ui-toggle', this.#onUiThemeToggle as EventListener)
   }
 
-  #onOpenImportPanel() {
+  #getDataPanel(): any {
     const root = (this.renderRoot ?? this) as any
-    const panel = root?.querySelector?.('data-panel') as any
+    return root?.querySelector?.('data-panel') as any
+  }
 
-    if (panel && typeof panel.openImport === 'function') {
-      panel.openImport()
+  #onToggleImportPanel() {
+    const panel = this.#getDataPanel()
+    if (!panel) return
+
+    if (panel.currentMode === 'import') {
+      panel.close?.()
+      return
     }
+
+    panel.openImport?.()
+  }
+
+  #onToggleExportPanel() {
+    const panel = this.#getDataPanel()
+    if (!panel) return
+
+    if (panel.currentMode === 'export') {
+      panel.close?.()
+      return
+    }
+
+    // Open + regenerate JSON
+    this.dispatchEvent(new DataExportEvent())
   }
 
   #onUiThemeToggle(e: Event) {

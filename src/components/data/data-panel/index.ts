@@ -16,6 +16,14 @@ export class DataPanel extends LitElement {
   @state() private error = ''
   @state() private mode: 'closed' | 'export' | 'import' = 'closed'
 
+  get isOpen(): boolean {
+    return this.mode !== 'closed'
+  }
+
+  get currentMode(): 'closed' | 'export' | 'import' {
+    return this.mode
+  }
+
   override connectedCallback(): void {
     super.connectedCallback()
 
@@ -55,6 +63,11 @@ export class DataPanel extends LitElement {
   setJson(json: string) {
     this.openExport()
     this.value = json
+    this.error = ''
+  }
+
+  close() {
+    this.mode = 'closed'
     this.error = ''
   }
 
