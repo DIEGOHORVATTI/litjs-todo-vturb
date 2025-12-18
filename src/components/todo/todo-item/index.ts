@@ -22,8 +22,6 @@ export class TodoItem extends LitElement {
   @state()
   isEditing: boolean = false
 
-  // When Enter commits, a blur event can follow immediately; this flag prevents
-  // the blur handler from cancelling the just-committed edit.
   #ignoreNextBlur = false
 
   override connectedCallback(): void {
@@ -90,7 +88,7 @@ export class TodoItem extends LitElement {
     const path = typeof e.composedPath === 'function' ? e.composedPath() : []
     const label = path.find((n): n is HTMLLabelElement => n instanceof HTMLLabelElement)
     if (!label) return
-    console.log('[todo-item] dblclick -> beginEdit', { id: this.todo?.id })
+
     this.#beginEdit()
   }
 
@@ -117,59 +115,44 @@ export class TodoItem extends LitElement {
   }
 
   #onKeydown(e: KeyboardEvent) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target.dataset.action === 'edit') {
-      const input = target as HTMLInputElement
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const input = path.find(
+      (n): n is HTMLInputElement => n instanceof HTMLInputElement && n.dataset.action === 'edit'
+    )
+    if (!input) return
 
-      console.log('[todo-item] keydown', {
-        id: this.todo?.id,
-        key: e.key,
-        value: input.value,
-        isEditing: this.isEditing,
+    if (e.key === 'Escape') {
+      e.preventDefault()
+
+      this.#abortEdit({ target: input } as unknown as Event)
+      return
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      this.#ignoreNextBlur = true
+
+      this.#finishEditWithInput(input)
+
+      queueMicrotask(() => {
+        this.#ignoreNextBlur = false
       })
-
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        console.log('[todo-item] escape -> abort')
-        this.#abortEdit(e)
-        return
-      }
-
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        this.#ignoreNextBlur = true
-        console.log('[todo-item] enter -> finish', { ignoreNextBlur: this.#ignoreNextBlur })
-        this.#finishEditWithInput(input)
-
-        // If the browser blurs the input after Enter, we want to ignore that.
-        queueMicrotask(() => {
-          this.#ignoreNextBlur = false
-          console.log('[todo-item] ignoreNextBlur reset')
-        })
-      }
     }
   }
 
   #onBlur(e: FocusEvent) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target.dataset.action === 'edit') {
-      console.log('[todo-item] blur', {
-        id: this.todo?.id,
-        ignoreNextBlur: this.#ignoreNextBlur,
-        value: (target as HTMLInputElement).value,
-      })
-      if (this.#ignoreNextBlur) return
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const input = path.find(
+      (n): n is HTMLInputElement => n instanceof HTMLInputElement && n.dataset.action === 'edit'
+    )
+    if (!input) return
 
-      // Requested UX: clicking outside cancels edit.
-      console.log('[todo-item] blur -> abort')
-      this.#abortEdit(e)
-    }
+    if (this.#ignoreNextBlur) return
+
+    this.#abortEdit({ target: input } as unknown as Event)
   }
 
   #toggleTodo() {
-    console.log('[todo-item] dispatch todo:update completed', { id: this.todo?.id })
     this.dispatchEvent(
       new UpdateTodoEvent({
         id: this.todo.id,
@@ -179,7 +162,6 @@ export class TodoItem extends LitElement {
   }
 
   #deleteTodo() {
-    console.log('[todo-item] dispatch todo:remove', { id: this.todo?.id })
     this.dispatchEvent(new RemoveTodoEvent({ id: this.todo.id }))
   }
 
@@ -193,9 +175,7 @@ export class TodoItem extends LitElement {
   }
 
   #finishEditWithInput(el: HTMLInputElement) {
-    const title = el.value.trim()
-
-    console.log('[todo-item] finishEdit', { id: this.todo?.id, title })
+    const title = (el.value ?? '').trim()
 
     if (!title) {
       this.#deleteTodo()
@@ -204,19 +184,17 @@ export class TodoItem extends LitElement {
     }
 
     if (title === this.todo.title) {
-      console.log('[todo-item] finishEdit no-op (same title)')
       this.isEditing = false
       return
     }
 
-    console.log('[todo-item] dispatch todo:update title', { id: this.todo?.id })
     this.dispatchEvent(new UpdateTodoEvent({ id: this.todo.id, changes: { title } }))
     this.isEditing = false
   }
 
   #abortEdit(e: Event) {
     const input = e.target as HTMLInputElement
-    console.log('[todo-item] abortEdit', { id: this.todo?.id })
+
     input.value = this.todo.title
     this.isEditing = false
   }
