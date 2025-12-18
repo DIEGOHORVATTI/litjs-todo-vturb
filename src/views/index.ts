@@ -297,10 +297,7 @@ export class TodoApp extends LitElement {
           .completedCount=${completedCount}
           .filter=${this.filter}></todo-footer>
 
-        <div
-          class="${classMap({
-            'theme-row': true,
-          })}">
+        <div class="theme-row">
           <div class="data-left">
             <data-panel-actions></data-panel-actions>
           </div>
@@ -310,7 +307,7 @@ export class TodoApp extends LitElement {
             data-action="theme"></ui-toggle>
         </div>
 
-        <data-panel class="${classMap({ hidden: this.todos.length === 0 })}"></data-panel>
+        <data-panel></data-panel>
       </section>
     `
   }
