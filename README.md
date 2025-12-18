@@ -13,9 +13,16 @@ npm run dev
 npm test
 
 # Rodar o build
-npm build
+npm run build
 npm start
 ```
+
+## Documentação (docs)
+
+- [`docs/v1/ARCHITECTURE.md`](docs/v1/ARCHITECTURE.md) — visão geral da arquitetura MVC (Lit + eventos + shadow fechado)
+- [`docs/v1/EVENT_CONTRACT.md`](docs/v1/EVENT_CONTRACT.md) — contrato formal dos eventos (`scope:action`, payloads, `bubbles/composed`)
+- [`docs/v1/DECISIONS.md`](docs/v1/DECISIONS.md) — decisões arquiteturais (ADRs) e trade-offs
+- [`docs/v1/TODO.md`](docs/v1/TODO.md) — checklist de requisitos/entrega
 
 ⸻
 
