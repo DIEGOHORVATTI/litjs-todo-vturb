@@ -47,24 +47,14 @@ export class DataPanelActions extends LitElement {
         (n): n is HTMLElement => n instanceof HTMLElement && n.tagName.toLowerCase() === 'ui-button'
       )
 
-    console.log('[data-panel-actions] ui-click', {
-      action: source?.dataset.action,
-      targetTag: (e.target as any)?.tagName,
-      path: path
-        .map((n) => (n instanceof HTMLElement ? n.tagName.toLowerCase() : typeof n))
-        .slice(0, 6),
-    })
-
     if (!source) return
 
     const action = source.dataset.action
     if (action === 'export') {
-      console.log('[data-panel-actions] dispatch data:export')
       this.dispatchEvent(new DataExportEvent())
     }
 
     if (action === 'import') {
-      console.log('[data-panel-actions] dispatch data-panel:open-import')
       this.dispatchEvent(
         new CustomEvent('data-panel:open-import', { bubbles: true, composed: true })
       )

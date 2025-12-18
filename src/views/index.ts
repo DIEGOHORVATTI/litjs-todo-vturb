@@ -151,10 +151,9 @@ export class TodoApp extends LitElement {
   }
 
   #onOpenImportPanel() {
-    console.log('[todo-app] received data-panel:open-import')
     const root = (this.renderRoot ?? this) as any
     const panel = root?.querySelector?.('data-panel') as any
-    console.log('[todo-app] open-import panel found?', { ok: Boolean(panel) })
+
     if (panel && typeof panel.openImport === 'function') {
       panel.openImport()
     }
@@ -295,33 +294,27 @@ export class TodoApp extends LitElement {
   }
 
   #onDataExport(_e: DataExportEvent) {
-    console.log('[todo-app] received data:export')
     const data = this.#snapshotState({ includeExportedAt: true })
     const json = JSON.stringify(data, null, 2)
-    console.log('[todo-app] export json', { len: json.length })
 
     const root = (this.renderRoot ?? this) as any
     const panel = root?.querySelector?.('data-panel') as any
-    console.log('[todo-app] export panel found?', { ok: Boolean(panel) })
+
     if (panel) {
       if (typeof panel.setJson === 'function') {
-        console.log('[todo-app] calling panel.setJson')
         panel.setJson(json)
       } else {
-        console.log('[todo-app] assigning panel.value')
         panel.value = json
       }
     }
   }
 
   #onDataImport(e: DataImportEvent) {
-    console.log('[todo-app] received data:import')
     const raw = (e.payload?.json ?? '').trim()
     if (!raw) return
-    console.log('[todo-app] import raw', { len: raw.length })
 
     const parsed = safeParseStorageData(raw)
-    console.log('[todo-app] import parsed?', { ok: Boolean(parsed) })
+
     if (!parsed) return
 
     window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY, JSON.stringify(parsed))
