@@ -1,51 +1,15 @@
-import { css, html, LitElement } from 'lit'
+import { html, LitElement } from 'lit'
 import { property, state } from 'lit/decorators.js'
 import { customElement } from 'lit/decorators/custom-element.js'
 
 import { DataExportEvent, DataImportEvent } from '../../../events/data-events.js'
+import { dataPanelStyles } from './styles.css.js'
 
 import '../../ui/ui-button/index.js'
 
 @customElement('data-panel')
 export class DataPanel extends LitElement {
-  static override styles = css`
-    :host {
-      display: block;
-    }
-
-    .wrap {
-      display: grid;
-      gap: var(--space-2);
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: var(--space-2);
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 120px;
-      resize: vertical;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
-      font-family:
-        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-        monospace;
-      font-size: 12px;
-      color: var(--color-text);
-      background: var(--color-surface-2);
-      box-sizing: border-box;
-    }
-
-    .hint {
-      font-size: var(--text-sm);
-      color: var(--color-muted);
-    }
-  `
+  static override styles = dataPanelStyles
 
   /**
    * Current JSON text.
@@ -54,6 +18,7 @@ export class DataPanel extends LitElement {
   @property({ type: String }) value = ''
 
   @state() private error = ''
+  @state() private mode: 'closed' | 'export' | 'import' = 'closed'
 
   override connectedCallback(): void {
     super.connectedCallback()
@@ -76,13 +41,18 @@ export class DataPanel extends LitElement {
           <ui-button data-action="import">Importar</ui-button>
         </div>
 
-        <textarea
-          data-action="json"
-          spellcheck="false"
-          placeholder='Cole aqui o JSON exportado (ou clique em "Exportar")'>
+        ${this.mode === 'closed'
+          ? null
+          : html`
+              <textarea
+                data-action="json"
+                spellcheck="false"
+                placeholder=${this.mode === 'import'
+                  ? 'Cole aqui o JSON exportado e clique em "Importar"'
+                  : 'JSON exportado (você pode copiar)'}>
 ${this.value}</textarea
-        >
-
+              >
+            `}
         ${this.error ? html`<div class="hint">${this.error}</div>` : null}
       </div>
     `
@@ -100,20 +70,24 @@ ${this.value}</textarea
   }
 
   #onUiClick(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-
-    const btn = target.closest('ui-button') as HTMLElement | null
-    if (!btn) return
+    const btn = e.target as HTMLElement | null
+    if (!btn || btn.tagName.toLowerCase() !== 'ui-button') return
 
     const action = btn.dataset.action
     if (action === 'export') {
+      this.mode = 'export'
       this.error = ''
-      this.dispatchEvent(new DataExportEvent())
+
+      void this.updateComplete.then(() => {
+        this.dispatchEvent(new DataExportEvent())
+      })
       return
     }
 
     if (action === 'import') {
+      this.mode = 'import'
+      this.error = ''
+
       const json = (this.value ?? '').trim()
       if (!json) {
         this.error = 'Cole um JSON antes de importar.'

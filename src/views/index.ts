@@ -83,7 +83,7 @@ export class TodoApp extends LitElement {
 
       .data-left {
         flex: 1;
-        min-width: 320px;
+        min-width: 0;
       }
 
       .hidden {
@@ -285,13 +285,16 @@ export class TodoApp extends LitElement {
     const json = JSON.stringify(data, null, 2)
 
     const panel = this.shadowRoot?.querySelector('data-panel') as any
-    const textarea = panel?.shadowRoot?.querySelector('textarea[data-action="json"]') as
-      | HTMLTextAreaElement
-      | undefined
-
-    if (textarea) {
-      textarea.value = json
+    if (panel) {
       panel.value = json
+      Promise.resolve(panel.updateComplete)
+        .catch(() => undefined)
+        .then(() => {
+          const textarea = panel?.shadowRoot?.querySelector(
+            'textarea[data-action="json"]'
+          ) as HTMLTextAreaElement | null
+          if (textarea) textarea.value = json
+        })
     }
 
     const blob = new Blob([json], { type: 'application/json' })
@@ -312,7 +315,6 @@ export class TodoApp extends LitElement {
 
     window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY, JSON.stringify(parsed))
 
-    // Apply to UI state and re-render.
     this.todos = [...parsed.todos]
     this.projects = [...parsed.projects]
     this.selectedProjectId = parsed.selectedProjectId ?? 'all'
