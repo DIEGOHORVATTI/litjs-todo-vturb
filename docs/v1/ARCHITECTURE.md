@@ -70,22 +70,27 @@ src/
 
 ```mermaid
 flowchart TD
-  Index[index.html] --> App[<todo-app> (root)]
+  Index["index.html"] --> App["App (root)"]
 
-  App --> Header[<app-header>]
-  App --> ProjectPicker[<project-picker>]
-  App --> ProjectForm[<project-form>]
-  App --> TodoForm[<todo-form>]
-  App --> TodoList[<todo-list>]
-  TodoList --> TodoItem[<todo-item>]
-  App --> TodoFooter[<todo-footer>]
+  subgraph UI["UI Components"]
+    App --> Header["Header"]
+    App --> ProjectPicker["ProjectPicker"]
+    App --> ProjectForm["ProjectForm"]
+    App --> TodoForm["TodoForm"]
+    App --> TodoList["TodoList"]
+    TodoList --> TodoItem["TodoItem"]
+    App --> TodoFooter["TodoFooter"]
+    App --> DataPanel["DataPanel"]
+    DataPanel --> DataPanelActions["DataPanelActions"]
+  end
 
-  App --> DataPanel[<data-panel>]
-  DataPanel --> DataPanelActions[<data-panel-actions>]
+  subgraph Core["Application Core"]
+    Controllers --> Services["Usecases / Services"]
+    Services --> Models["Models"]
+    Services --> Storage["Storage / localStorage"]
+  end
 
-  App --> Controllers[Controllers]
-  Controllers --> Services[Usecases/Services]
-  Services --> Models[Models]
-  Services --> Storage[(Storage/localStorage)]
+  App --> Controllers
+
 
 ```
