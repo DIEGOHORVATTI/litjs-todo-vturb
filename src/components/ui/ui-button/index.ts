@@ -29,11 +29,12 @@ export class UiButton extends LitElement {
   }
 
   #onClick(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-
-    const btn = target.closest('button[data-action="click"]')
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const btn = path.find(
+      (n): n is HTMLButtonElement => n instanceof HTMLButtonElement && n.dataset.action === 'click'
+    )
     if (!btn) return
+
     this.dispatchEvent(new CustomEvent('ui-click', { bubbles: true, composed: true }))
   }
 }

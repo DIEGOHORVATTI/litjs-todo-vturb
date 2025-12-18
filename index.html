@@ -1,51 +1,46 @@
 <!doctype html>
 <html data-framework="lit" lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TodoMVC+: Lit with Closed Shadow DOM</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TodoMVC+: Lit with Closed Shadow DOM</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
 
-  <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-    }
+      body {
+        font:
+          14px ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          'Apple Color Emoji',
+          'Segoe UI Emoji';
+        line-height: 1.4em;
+        overflow-x: hidden;
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-weight: 300;
+      }
 
-    body {
-      font:
-        14px ui-sans-serif,
-        system-ui,
-        -apple-system,
-        Segoe UI,
-        Roboto,
-        Helvetica,
-        Arial,
-        'Apple Color Emoji',
-        'Segoe UI Emoji';
-      line-height: 1.4em;
-      background: var(--color-bg);
-      color: var(--color-text);
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      font-weight: 300;
-    }
+      body {
+        display: grid;
+        place-items: start center;
+      }
+    </style>
 
-    body {
-      display: grid;
-      place-items: start center;
-    }
-  </style>
+    <script type="module" src="./src/views/index.ts"></script>
+  </head>
 
-  <script type="module" src="./src/views/index.ts"></script>
-</head>
-
-<body>
-  <todo-app></todo-app>
-</body>
-
+  <body>
+    <todo-app></todo-app>
+  </body>
 </html>

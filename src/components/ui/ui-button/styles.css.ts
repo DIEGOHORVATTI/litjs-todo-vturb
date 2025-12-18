@@ -6,9 +6,7 @@ export const uiButtonStyles = css`
   }
 
   button {
-    margin: 0;
-    padding: 0;
-    border: 0;
+    padding: 6px 10px;
     background: none;
     font-size: 100%;
     vertical-align: baseline;
@@ -20,5 +18,18 @@ export const uiButtonStyles = css`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     cursor: pointer;
+    background: var(--color-surface-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+  }
+
+  button:hover {
+    border-color: color-mix(in oklab, var(--color-accent), transparent 65%);
+  }
+
+  button:focus {
+    color: var(--color-text);
+    background: color-mix(in oklab, var(--color-accent), transparent 88%);
+    border-color: color-mix(in oklab, var(--color-accent), transparent 45%);
   }
 `

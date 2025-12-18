@@ -8,8 +8,16 @@ import { uiInputStyles } from './styles.css.js'
 export class UiInput extends LitElement {
   static override styles = uiInputStyles
 
+  @property({ type: String }) type: 'text' | 'date' | 'select' = 'text'
+
   @property({ type: String }) placeholder = ''
   @property({ type: String }) value = ''
+
+  /**
+   * Only used when type === 'select'.
+   * Each option is rendered as <option value="value">label</option>.
+   */
+  @property({ type: Array }) options: Array<{ value: string; label: string }> = []
 
   override connectedCallback(): void {
     super.connectedCallback()
@@ -25,9 +33,17 @@ export class UiInput extends LitElement {
   }
 
   override render() {
+    if (this.type === 'select') {
+      return html`
+        <select data-action="select" .value=${this.value}>
+          ${this.options.map((o) => html`<option value=${o.value}>${o.label}</option>`)}
+        </select>
+      `
+    }
+
     return html`
       <input
-        type="text"
+        type=${this.type}
         .value=${this.value}
         .placeholder=${this.placeholder}
         data-action="input" />
@@ -35,10 +51,10 @@ export class UiInput extends LitElement {
   }
 
   #onInput(e: Event) {
-    const input = getInputFromEvent(e)
-    if (!input) return
+    const value = getValueFromEvent(e)
+    if (value === null) return
 
-    this.value = input.value
+    this.value = value
     this.dispatchEvent(
       new CustomEvent('ui-change', {
         detail: this.value,
@@ -50,7 +66,7 @@ export class UiInput extends LitElement {
 
   #onKeydown(e: Event) {
     const evt = e as KeyboardEvent
-    const input = getInputFromEvent(e)
+    const input = getInputTextFromEvent(e)
     if (!input) return
 
     this.value = input.value
@@ -74,5 +90,27 @@ function getInputFromEvent(e: Event): HTMLInputElement | null {
       return node
     }
   }
+  return null
+}
+
+function getInputTextFromEvent(e: Event): HTMLInputElement | null {
+  return getInputFromEvent(e)
+}
+
+function getSelectFromEvent(e: Event): HTMLSelectElement | null {
+  const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+  for (const node of path) {
+    if (node instanceof HTMLSelectElement && node.dataset.action === 'select') {
+      return node
+    }
+  }
+  return null
+}
+
+function getValueFromEvent(e: Event): string | null {
+  const input = getInputFromEvent(e)
+  if (input) return input.value
+  const select = getSelectFromEvent(e)
+  if (select) return select.value
   return null
 }

@@ -21,6 +21,9 @@ export class TodoList extends LitElement {
   @property({ type: Boolean })
   allCompleted = false
 
+  @property({ type: Array })
+  projects: Array<{ id: string; name: string }> = []
+
   override connectedCallback(): void {
     super.connectedCallback()
     this.addEventListener('click', this.#onClick)
@@ -32,6 +35,8 @@ export class TodoList extends LitElement {
   }
 
   override render() {
+    const projectNameById = new Map(this.projects.map((p) => [p.id, p.name]))
+
     return html`
       <div class="new-todo-row">
         <input
@@ -49,7 +54,10 @@ export class TodoList extends LitElement {
         ${repeat(
           this.todos,
           (todo) => todo.id,
-          (todo) => html`<todo-item .todo=${todo}></todo-item>`
+          (todo) =>
+            html`<todo-item
+              .todo=${todo}
+              .projectName=${projectNameById.get(todo.projectId) ?? null}></todo-item>`
         )}
       </ul>
     `

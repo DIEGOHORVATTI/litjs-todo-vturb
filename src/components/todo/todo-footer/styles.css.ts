@@ -41,16 +41,6 @@ export const todoFooterStyles = css`
     display: inline-block;
   }
 
-  a {
-    padding: 6px 10px;
-    list-style: none;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    color: inherit;
-    margin: 3px;
-    text-decoration: none;
-  }
-
   .clear-completed {
     border: 1px solid var(--color-border);
     background: var(--color-surface-2);
@@ -65,6 +55,16 @@ export const todoFooterStyles = css`
     color: var(--color-text);
     border-color: color-mix(in oklab, var(--color-accent), transparent 65%);
     background: color-mix(in oklab, var(--color-accent), transparent 88%);
+  }
+
+  a {
+    padding: 6px 10px;
+    list-style: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: inherit;
+    margin: 3px;
+    text-decoration: none;
   }
 
   a:hover {

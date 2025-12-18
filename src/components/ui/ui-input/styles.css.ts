@@ -1,11 +1,12 @@
 import { css } from 'lit'
 
 export const uiInputStyles = css`
-  input {
+  input,
+  select {
     border: 1px solid var(--color-border);
     width: 100%;
-    padding: 8px 12px;
-    font-size: var(--text-xl);
+    padding: 8px 9px;
+    font-size: var(--text-md);
     color: var(--color-text);
     background: var(--color-surface-2);
     font-family: inherit;
@@ -18,7 +19,8 @@ export const uiInputStyles = css`
     border-radius: var(--radius-sm);
   }
 
-  input:focus {
+  input:focus,
+  select:focus {
     outline: 0;
     box-shadow: var(--focus-ring);
     border-color: color-mix(in oklab, var(--color-accent), transparent 55%);
@@ -26,5 +28,9 @@ export const uiInputStyles = css`
 
   input::placeholder {
     color: var(--color-muted);
+  }
+
+  select {
+    cursor: pointer;
   }
 `

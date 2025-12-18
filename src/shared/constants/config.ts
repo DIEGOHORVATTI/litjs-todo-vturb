@@ -7,6 +7,6 @@ export const CONSTANTS = {
   STORAGE_DEFAULTS: {
     VERSION: '1',
     THEME: 'auto',
-    SELECTED_PROJECT_ID: 'inbox',
+    SELECTED_PROJECT_ID: 'all',
   },
 } as const
