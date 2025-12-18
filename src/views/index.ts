@@ -266,7 +266,6 @@ export class TodoApp extends LitElement {
 
         <div
           class="${classMap({
-            hidden: this.todos.length === 0,
             'theme-row': true,
           })}">
           <div class="data-left">

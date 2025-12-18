@@ -18,13 +18,12 @@ export const dataPanelStyles = css`
   }
 
   textarea {
-    display: block;
-    width: 100%;
-    min-height: 120px;
+    min-height: 200px;
     resize: vertical;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: 10px;
+    margin: 10px;
     font-family:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
       monospace;
