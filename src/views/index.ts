@@ -24,6 +24,7 @@ import '../components/ui/ui-toggle/index.js'
 import '../components/projects/project-picker/index.js'
 import '../components/projects/project-form/index.js'
 import '../components/data/data-panel/index.js'
+import '../components/data/data-panel-actions/index.js'
 
 import { DataExportEvent, DataImportEvent } from '../events/data-events.js'
 import { AddProjectEvent, SelectProjectEvent } from '../events/project-events.js'
@@ -269,48 +270,47 @@ export class TodoApp extends LitElement {
             'theme-row': true,
           })}">
           <div class="data-left">
-            <data-panel></data-panel>
+            <data-panel-actions></data-panel-actions>
           </div>
           <ui-toggle
             label="Modo escuro"
             .checked=${this.theme === 'dark'}
             data-action="theme"></ui-toggle>
         </div>
+
+        <data-panel class="${classMap({ hidden: this.todos.length === 0 })}"></data-panel>
       </section>
     `
   }
 
   #onDataExport(_e: DataExportEvent) {
+    console.log('[todo-app] received data:export')
     const data = this.#snapshotState({ includeExportedAt: true })
     const json = JSON.stringify(data, null, 2)
+    console.log('[todo-app] export json', { len: json.length })
 
-    const panel = this.shadowRoot?.querySelector('data-panel') as any
+    const root = (this.renderRoot ?? this) as any
+    const panel = root?.querySelector?.('data-panel') as any
+    console.log('[todo-app] export panel found?', { ok: Boolean(panel) })
     if (panel) {
-      panel.value = json
-      Promise.resolve(panel.updateComplete)
-        .catch(() => undefined)
-        .then(() => {
-          const textarea = panel?.shadowRoot?.querySelector(
-            'textarea[data-action="json"]'
-          ) as HTMLTextAreaElement | null
-          if (textarea) textarea.value = json
-        })
+      if (typeof panel.setJson === 'function') {
+        console.log('[todo-app] calling panel.setJson')
+        panel.setJson(json)
+      } else {
+        console.log('[todo-app] assigning panel.value')
+        panel.value = json
+      }
     }
-
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `todomvc-plus-export-${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(url)
   }
 
   #onDataImport(e: DataImportEvent) {
+    console.log('[todo-app] received data:import')
     const raw = (e.payload?.json ?? '').trim()
     if (!raw) return
+    console.log('[todo-app] import raw', { len: raw.length })
 
     const parsed = safeParseStorageData(raw)
+    console.log('[todo-app] import parsed?', { ok: Boolean(parsed) })
     if (!parsed) return
 
     window.localStorage.setItem(CONSTANTS.LOCAL_STORAGE_KEYS.STATE_KEY, JSON.stringify(parsed))

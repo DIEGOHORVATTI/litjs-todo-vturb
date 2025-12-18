@@ -13,11 +13,12 @@ export const dataPanelStyles = css`
   .row {
     display: flex;
     align-items: center;
-    justify-content space-between;
+    justify-content: flex-start;
     gap: var(--space-2);
   }
 
   textarea {
+    display: block;
     width: 100%;
     min-height: 120px;
     resize: vertical;
