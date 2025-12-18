@@ -26,6 +26,10 @@ npm start
 
 ⸻
 
+<img width="1600" height="1048" alt="image" src="https://github.com/user-attachments/assets/1383da8e-3da6-455b-97c3-14fe4d8c96b0" />
+<img width="1600" height="1048" alt="image" src="https://github.com/user-attachments/assets/b73d95ea-e0f3-463c-8b9d-130cfb55fc5b" />
+
+
 Este desafio avalia sua habilidade com **JavaScript moderno + Web Components + Lit**, com foco em **componentização**, **estado**, **eventos nativos** (via `addEventListener`), **estilização com CSS Variables**, **Shadow DOM fechado** e **testes com Jest**.
 
 Base obrigatória (starter):
