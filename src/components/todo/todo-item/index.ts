@@ -22,19 +22,23 @@ export class TodoItem extends LitElement {
   @state()
   isEditing: boolean = false
 
+  // When Enter commits, a blur event can follow immediately; this flag prevents
+  // the blur handler from cancelling the just-committed edit.
+  #ignoreNextBlur = false
+
   override connectedCallback(): void {
     super.connectedCallback()
 
     this.addEventListener('dblclick', this.#onDblClick)
     this.addEventListener('click', this.#onClick)
-    this.addEventListener('keyup', this.#onKeyup)
+    this.addEventListener('keydown', this.#onKeydown)
     this.addEventListener('blur', this.#onBlur, true)
   }
 
   override disconnectedCallback(): void {
     this.removeEventListener('dblclick', this.#onDblClick)
     this.removeEventListener('click', this.#onClick)
-    this.removeEventListener('keyup', this.#onKeyup)
+    this.removeEventListener('keydown', this.#onKeydown)
     this.removeEventListener('blur', this.#onBlur, true)
     super.disconnectedCallback()
   }
@@ -83,11 +87,11 @@ export class TodoItem extends LitElement {
   }
 
   #onDblClick(e: Event) {
-    const target = e.target as HTMLElement | null
-    if (!target) return
-    if (target.dataset.action === 'begin-edit') {
-      this.#beginEdit()
-    }
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : []
+    const label = path.find((n): n is HTMLLabelElement => n instanceof HTMLLabelElement)
+    if (!label) return
+    console.log('[todo-item] dblclick -> beginEdit', { id: this.todo?.id })
+    this.#beginEdit()
   }
 
   #onClick(e: Event) {
@@ -112,14 +116,37 @@ export class TodoItem extends LitElement {
     this.#deleteTodo()
   }
 
-  #onKeyup(e: KeyboardEvent) {
+  #onKeydown(e: KeyboardEvent) {
     const target = e.target as HTMLElement | null
     if (!target) return
     if (target.dataset.action === 'edit') {
-      this.#captureEscape(e)
+      const input = target as HTMLInputElement
+
+      console.log('[todo-item] keydown', {
+        id: this.todo?.id,
+        key: e.key,
+        value: input.value,
+        isEditing: this.isEditing,
+      })
+
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        console.log('[todo-item] escape -> abort')
+        this.#abortEdit(e)
+        return
+      }
 
       if (e.key === 'Enter') {
-        this.#finishEditWithInput(target as HTMLInputElement)
+        e.preventDefault()
+        this.#ignoreNextBlur = true
+        console.log('[todo-item] enter -> finish', { ignoreNextBlur: this.#ignoreNextBlur })
+        this.#finishEditWithInput(input)
+
+        // If the browser blurs the input after Enter, we want to ignore that.
+        queueMicrotask(() => {
+          this.#ignoreNextBlur = false
+          console.log('[todo-item] ignoreNextBlur reset')
+        })
       }
     }
   }
@@ -128,11 +155,21 @@ export class TodoItem extends LitElement {
     const target = e.target as HTMLElement | null
     if (!target) return
     if (target.dataset.action === 'edit') {
-      this.#finishEditWithInput(target as HTMLInputElement)
+      console.log('[todo-item] blur', {
+        id: this.todo?.id,
+        ignoreNextBlur: this.#ignoreNextBlur,
+        value: (target as HTMLInputElement).value,
+      })
+      if (this.#ignoreNextBlur) return
+
+      // Requested UX: clicking outside cancels edit.
+      console.log('[todo-item] blur -> abort')
+      this.#abortEdit(e)
     }
   }
 
   #toggleTodo() {
+    console.log('[todo-item] dispatch todo:update completed', { id: this.todo?.id })
     this.dispatchEvent(
       new UpdateTodoEvent({
         id: this.todo.id,
@@ -142,41 +179,44 @@ export class TodoItem extends LitElement {
   }
 
   #deleteTodo() {
+    console.log('[todo-item] dispatch todo:remove', { id: this.todo?.id })
     this.dispatchEvent(new RemoveTodoEvent({ id: this.todo.id }))
   }
 
   #beginEdit() {
     this.isEditing = true
     const input = this.shadowRoot!.querySelector('.edit') as HTMLInputElement
-    setTimeout(() => input.focus(), 0)
+    setTimeout(() => {
+      input.focus()
+      input.select()
+    }, 0)
   }
 
   #finishEditWithInput(el: HTMLInputElement) {
     const title = el.value.trim()
 
-    // TodoMVC behavior: empty title removes the todo.
+    console.log('[todo-item] finishEdit', { id: this.todo?.id, title })
+
     if (!title) {
       this.#deleteTodo()
       this.isEditing = false
       return
     }
 
-    // Avoid unnecessary updates when nothing changed.
     if (title === this.todo.title) {
+      console.log('[todo-item] finishEdit no-op (same title)')
       this.isEditing = false
       return
     }
 
+    console.log('[todo-item] dispatch todo:update title', { id: this.todo?.id })
     this.dispatchEvent(new UpdateTodoEvent({ id: this.todo.id, changes: { title } }))
     this.isEditing = false
   }
 
-  #captureEscape(e: KeyboardEvent) {
-    if (e.key === 'Escape') this.#abortEdit(e)
-  }
-
   #abortEdit(e: Event) {
     const input = e.target as HTMLInputElement
+    console.log('[todo-item] abortEdit', { id: this.todo?.id })
     input.value = this.todo.title
     this.isEditing = false
   }
@@ -193,7 +233,6 @@ export class TodoItem extends LitElement {
 }
 
 function formatDueDate(d: Date): string {
-  // Render as YYYY-MM-DD for consistency.
   const yyyy = d.getFullYear()
   const mm = String(d.getMonth() + 1).padStart(2, '0')
   const dd = String(d.getDate()).padStart(2, '0')

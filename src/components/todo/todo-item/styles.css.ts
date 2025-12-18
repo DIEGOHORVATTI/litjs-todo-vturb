@@ -22,8 +22,10 @@ export const todoItemStyles = css`
   .editing .edit {
     display: block;
     width: calc(100% - 43px);
-    padding: 12px 16px;
+    padding: 8px 12px;
     margin: 0 0 0 43px;
+    font-size: var(--text-lg);
+    line-height: 1.2;
   }
 
   .editing .view {
