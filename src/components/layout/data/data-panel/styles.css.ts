@@ -14,7 +14,7 @@ export const dataPanelStyles = css`
   .row {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: var(--space-2);
   }
 
