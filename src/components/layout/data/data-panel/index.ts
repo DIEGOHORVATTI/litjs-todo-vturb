@@ -2,10 +2,10 @@ import { html, LitElement } from 'lit'
 import { property, state } from 'lit/decorators.js'
 import { customElement } from 'lit/decorators/custom-element.js'
 
-import { DataImportEvent } from '../../../events/data-events.js'
+import { DataImportEvent } from '../../../../events/data-events.js'
 import { dataPanelStyles } from './styles.css.js'
 
-import '../../ui/ui-button/index.js'
+import '../../../ui/ui-button/index.js'
 
 @customElement('data-panel')
 export class DataPanel extends LitElement {

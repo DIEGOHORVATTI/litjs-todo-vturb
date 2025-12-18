@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators/custom-element.js'
 
-import '../../ui/ui-button/index.js'
+import '../../../ui/ui-button/index.js'
 
 @customElement('data-panel-actions')
 export class DataPanelActions extends LitElement {

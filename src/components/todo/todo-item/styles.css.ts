@@ -46,6 +46,7 @@ export const todoItemStyles = css`
 
   label {
     word-break: break-all;
+    font-size: var(--text-lg);
     padding: 15px 15px 15px 60px;
     display: block;
     line-height: 1.2;
