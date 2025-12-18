@@ -16,11 +16,11 @@ export class ProjectPicker extends LitElement {
 
   override connectedCallback(): void {
     super.connectedCallback()
-    this.addEventListener('change', this.#onChange)
+    this.shadowRoot?.addEventListener('change', this.#onChange)
   }
 
   override disconnectedCallback(): void {
-    this.removeEventListener('change', this.#onChange)
+    this.shadowRoot?.removeEventListener('change', this.#onChange)
     super.disconnectedCallback()
   }
 

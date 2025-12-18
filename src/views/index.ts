@@ -237,7 +237,11 @@ export class TodoApp extends LitElement {
         </div>
 
         <main class="main">
-          <todo-list class="show-priority" .todos=${filteredTodos} .allCompleted=${allCompleted}>
+          <todo-list
+            class="show-priority"
+            .todos=${filteredTodos}
+            .allCompleted=${allCompleted}
+            .projects=${this.projects}>
             <todo-form slot="new-todo" .projectId=${this.selectedProjectId}></todo-form>
           </todo-list>
         </main>

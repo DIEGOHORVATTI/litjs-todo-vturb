@@ -76,6 +76,12 @@ export const todoItemStyles = css`
     text-transform: capitalize;
   }
 
+  .badge[data-project='true'] {
+    border-color: color-mix(in oklab, var(--color-text), transparent 80%);
+    background: color-mix(in oklab, var(--color-text), transparent 92%);
+    text-transform: none;
+  }
+
   .badge[data-priority='low'] {
     border-color: color-mix(in oklab, var(--color-accent), transparent 65%);
     background: color-mix(in oklab, var(--color-accent), transparent 88%);
