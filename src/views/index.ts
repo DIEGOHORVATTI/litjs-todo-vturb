@@ -143,9 +143,21 @@ export class TodoApp extends LitElement {
     this.addEventListener(DataExportEvent.eventName, this.#onDataExport)
     this.addEventListener(DataImportEvent.eventName, this.#onDataImport)
 
+    this.addEventListener('data-panel:open-import', this.#onOpenImportPanel as EventListener)
+
     this.addEventListener(ThemeChangeEvent.eventName, this.#onThemeChange)
 
     this.addEventListener('ui-toggle', this.#onUiThemeToggle as EventListener)
+  }
+
+  #onOpenImportPanel() {
+    console.log('[todo-app] received data-panel:open-import')
+    const root = (this.renderRoot ?? this) as any
+    const panel = root?.querySelector?.('data-panel') as any
+    console.log('[todo-app] open-import panel found?', { ok: Boolean(panel) })
+    if (panel && typeof panel.openImport === 'function') {
+      panel.openImport()
+    }
   }
 
   #onUiThemeToggle(e: Event) {

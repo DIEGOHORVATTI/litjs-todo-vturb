@@ -45,6 +45,7 @@ export const tokens = css`
     --color-surface-2: #fbfbfd;
     --color-text: #0f172a;
     --color-muted: #64748b;
+    --color-error: #dc2626;
     --color-border: rgba(15, 23, 42, 0.12);
 
     --focus-ring: 0 0 0 3px rgba(234, 88, 12, 0.28);

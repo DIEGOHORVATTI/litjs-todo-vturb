@@ -7,6 +7,7 @@ export const dataPanelStyles = css`
 
   .wrap {
     display: grid;
+    margin: 10px;
     gap: var(--space-2);
   }
 
@@ -23,7 +24,6 @@ export const dataPanelStyles = css`
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     padding: 10px;
-    margin: 10px;
     font-family:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
       monospace;
@@ -41,6 +41,6 @@ export const dataPanelStyles = css`
 
   .hint {
     font-size: var(--text-sm);
-    color: var(--color-muted);
+    color: var(--color-error);
   }
 `

@@ -53,23 +53,21 @@ export class DataPanel extends LitElement {
   }
 
   setJson(json: string) {
-    console.log('[data-panel] setJson', { len: json?.length ?? 0 })
     this.openExport()
     this.value = json
     this.error = ''
   }
 
   openExport() {
-    console.log('[data-panel] openExport')
     this.mode = 'export'
     this.error = ''
     this.addEventListener('ui-click', this.#onUiClick as EventListener)
   }
 
   openImport() {
-    console.log('[data-panel] openImport')
     this.mode = 'import'
     this.error = ''
+    this.value = ''
     this.addEventListener('ui-click', this.#onUiClick as EventListener)
   }
 
@@ -85,7 +83,6 @@ export class DataPanel extends LitElement {
   }
 
   #onUiClick(e: Event) {
-    console.log('[data-panel] ui-click', { targetTag: (e.target as any)?.tagName })
     const path = typeof e.composedPath === 'function' ? (e.composedPath() as unknown[]) : []
     const directTarget = e.target
     const directSource =
@@ -102,7 +99,6 @@ export class DataPanel extends LitElement {
 
     const action = source.dataset.action
     if (action === 'import') {
-      console.log('[data-panel] dispatch data:import', { len: (this.value ?? '').length })
       const json = (this.value ?? '').trim()
       if (!json) {
         this.error = 'Cole um JSON antes de importar.'
@@ -115,7 +111,6 @@ export class DataPanel extends LitElement {
   }
 
   #onOpenImport() {
-    console.log('[data-panel] received data-panel:open-import')
     this.openImport()
   }
 }
