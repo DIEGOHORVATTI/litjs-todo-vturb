@@ -51,8 +51,6 @@ export class TodoItem extends LitElement {
     const isOverdue =
       !this.todo.completed && dueValid && (due as Date).getTime() < new Date().getTime()
 
-    const showProjectBadge = !!this.projectName && this.todo.projectId !== 'all'
-
     return html`
       <li class="${classMap(itemClassList)}">
         <div class="view">
@@ -65,7 +63,7 @@ export class TodoItem extends LitElement {
           <label>
             <span data-action="begin-edit"> ${this.todo.title} </span>
             <span class="meta" aria-hidden="true">
-              ${showProjectBadge
+              ${this.projectName
                 ? html`<span class="badge" data-project="true">${this.projectName}</span>`
                 : null}
               <span class="badge" data-priority=${this.todo.priority}> ${this.todo.priority} </span>

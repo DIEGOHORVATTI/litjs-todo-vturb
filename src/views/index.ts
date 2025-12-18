@@ -220,9 +220,15 @@ export class TodoApp extends LitElement {
 
   override render() {
     const filteredTodos = this.#filteredTodos()
-    const activeCount = this.todos.filter((t) => !t.completed).length
-    const completedCount = this.todos.length - activeCount
-    const allCompleted = this.todos.length > 0 && completedCount === this.todos.length
+
+    const projectTodos =
+      this.selectedProjectId && this.selectedProjectId !== 'all'
+        ? this.todos.filter((t) => t.projectId === this.selectedProjectId)
+        : this.todos
+
+    const activeCount = projectTodos.filter((t) => !t.completed).length
+    const completedCount = projectTodos.length - activeCount
+    const allCompleted = projectTodos.length > 0 && completedCount === projectTodos.length
 
     return html`
       <section>
@@ -264,8 +270,6 @@ export class TodoApp extends LitElement {
             .checked=${this.theme === 'dark'}
             data-action="theme"></ui-toggle>
         </div>
-
-        <data-panel></data-panel>
       </section>
     `
   }

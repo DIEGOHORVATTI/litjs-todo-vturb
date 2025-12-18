@@ -88,7 +88,7 @@ export class TodoForm extends LitElement {
       this.dispatchEvent(
         new AddTodoEvent({
           title: value,
-          projectId: this.projectId === 'all' ? 'inbox' : this.projectId,
+          projectId: this.projectId,
           priority: this.priority,
           ...(this.dueDate ? { dueDate: new Date(this.dueDate).toISOString() } : {}),
         })

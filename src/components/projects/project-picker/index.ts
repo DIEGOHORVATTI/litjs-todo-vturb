@@ -31,7 +31,6 @@ export class ProjectPicker extends LitElement {
 
         <select data-action="select-project" .value=${this.selectedProjectId}>
           <option value="all">Todos</option>
-          <option value="inbox">Inbox</option>
           ${this.projects.map((p) => html`<option value=${p.id}>${p.name}</option>`)}
         </select>
       </label>
